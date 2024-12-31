@@ -7,6 +7,7 @@ import { Pokemon, PokemonSchema } from './entities/pokemon.entity';
 @Module({
   controllers: [PokemonController],
   providers: [PokemonService],
+  exports: [MongooseModule],
   imports: [
     // IMPORTAR LOS MODELOS DE MONGO EN LA APP PARA CARGARLOS Y UTILIZARLOS EN EL CRUD
     MongooseModule.forFeature([
