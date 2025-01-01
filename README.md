@@ -30,6 +30,8 @@ $ docker-compose up -d
 http://localhost:3000/api/v2/seed
 ```
 
+6. Configurar las variables de entorno creando el archivo **.env** basandose del arhcivo **.env-template**
+
 ## Compilar y levantar proyecto en desarrollo y produccion
 
 ```bash

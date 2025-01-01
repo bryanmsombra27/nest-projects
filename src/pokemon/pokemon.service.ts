@@ -11,14 +11,22 @@ import { Pokemon } from './entities/pokemon.entity';
 import { isValidObjectId, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PokemonService {
+  private default_limit: number;
+
   constructor(
     // INYECCION PROPIA DE MONGOOSE PARA PODER TRABAJAR NEST CON MONGGOSE para inytectar modelos en los servicios
     @InjectModel(Pokemon.name)
     private readonly PokemonModel: Model<Pokemon>,
-  ) {}
+    // INYECTANDO EL SERVICIO PARA OBTENER LOS VALORES DE LAS VARIABLES DE ENTORNO
+    private readonly configService: ConfigService,
+  ) {
+    //EL NOMBRE 'defaultLimit' SE OBTIENE DE LA LLAVE PROVISTA POR EL ARCHIVO app.config.ts donde se centralizaron las variables de entorno MEDIANTE UN OBJETO Y SE ACCEDE A LOS VALORES MEDIANTE EL NOMBRE QUE SE LE DIO A LA LLAVE DEL VALOR
+    this.default_limit = this.configService.get<number>('defaultLimit');
+  }
 
   async create(createPokemonDto: CreatePokemonDto) {
     const newPokemon = {
@@ -36,7 +44,7 @@ export class PokemonService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { limit = 10, offset = 0 } = paginationDto;
+    const { limit = this.default_limit, offset = 0 } = paginationDto;
 
     return await this.PokemonModel.find().limit(limit).skip(offset).sort({
       no: 1,
