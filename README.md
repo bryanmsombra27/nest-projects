@@ -32,6 +32,22 @@ http://localhost:3000/api/v2/seed
 
 6. Configurar las variables de entorno creando el archivo **.env** basandose del arhcivo **.env-template**
 
+# Build de produccion para la imagen de docker
+
+1. Crear el archivo **_ .env.prod _** y llenar las variables
+
+2. crear la nueva imagen
+
+```bash
+docker-compose -f docker-compose.prod.yaml --env-file .env.prod up --build
+```
+
+3.Correr la imagen de docker
+
+```bash
+docker-compose -f docker-compose.prod.yaml --env-file .env.prod up
+```
+
 ## Compilar y levantar proyecto en desarrollo y produccion
 
 ```bash
