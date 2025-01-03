@@ -35,3 +35,9 @@ docker compose up -d
 ```
 
 2. Configurar archivo **_.env_** con las variables de entorno de acuerdo al archivo **.env-template**
+
+3. Ejecutar el endpoint Seed para insertar data de prueba
+
+```bash
+  http://localhost:3000/api/seed
+```
