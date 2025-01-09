@@ -11,6 +11,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { SwaggerModule } from '@nestjs/swagger';
+import { MessagesWsModule } from './messages-ws/messages-ws.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { SwaggerModule } from '@nestjs/swagger';
     FilesModule,
     AuthModule,
     SwaggerModule,
+    MessagesWsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
