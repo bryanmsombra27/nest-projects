@@ -6,6 +6,7 @@ import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { WarehouseModule } from './warehouse/warehouse.module';
+import { ProvidersModule } from './providers/providers.module';
 
 @Module({
   imports: [
@@ -35,6 +36,8 @@ import { WarehouseModule } from './warehouse/warehouse.module';
     AuthModule,
 
     WarehouseModule,
+
+    ProvidersModule,
   ],
   controllers: [],
   providers: [],
