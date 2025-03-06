@@ -7,7 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService, Credentials } from './auth.service';
-import { AuthguardGuard } from '../guards/authguard.guard';
+import { AuthGuard } from '../guards/authguard.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +20,7 @@ export class AuthController {
     return { token };
   }
 
-  @UseGuards(AuthguardGuard)
+  @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;

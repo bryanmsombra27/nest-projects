@@ -13,13 +13,13 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDTo } from '../common/dto/pagination';
-import { AuthguardGuard } from '../guards/authguard.guard';
+import { AuthGuard } from '../guards/authguard.guard';
 import { LoggedUser } from 'src/common/decorators/user.decorator';
 import { User } from './entities/user.entity';
 import { ADMIN_ROLE } from '../common/config/constants';
 
 @Controller('users')
-@UseGuards(AuthguardGuard)
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

@@ -9,7 +9,7 @@ import { AuthService } from '../auth/auth.service';
 import { User } from '../users/entities/user.entity';
 
 @Injectable()
-export class AuthguardGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
   canActivate(
