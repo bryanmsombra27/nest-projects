@@ -2,9 +2,10 @@ import { Role } from '../../roles/entities/role.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 
 @Entity({
@@ -35,8 +36,9 @@ export class User {
   })
   isActive: boolean;
 
-  //CAMPOS PENDIENTES DE AGREGAR   PENDIENTES DE RELACIONES
-  @OneToOne(() => Role)
+  @ManyToOne(() => Role, (role) => role.id, { nullable: false })
   role: Role;
+
+  //CAMPOS PENDIENTES DE AGREGAR   PENDIENTES DE RELACIONES
   //   warehouseId: number;
 }
