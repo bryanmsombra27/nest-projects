@@ -4,33 +4,57 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { hash } from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
-import { PaginationDTo } from 'src/common/dto/pagination';
+import { ILike, Repository } from 'typeorm';
+import { PaginationDTo } from '../common/dto/pagination';
+import { AuthService } from '../auth/auth.service';
+import { Role } from 'src/roles/entities/role.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
+    private readonly jwtService: AuthService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
     const { password, ...rest } = createUserDto;
     const passwordHash = await hash(password, 10);
+    const role = await this.roleRepository.findOne({
+      where: {
+        isActive: true,
+        name: ILike('%tienda%'),
+      },
+    });
+
+    // const userInstance = await this.userRepository.preload({
+    //   ...rest,
+    //   password: passwordHash,
+    //   role: {
+    //     id: 2,
+    //   },
+    // });
 
     const userInstance = this.userRepository.create({
       ...rest,
       password: passwordHash,
-      role: {
-        id: 2,
-      },
+      role: role,
     });
+
     const { password: dbPassword, ...user } =
       await this.userRepository.save(userInstance);
 
+    const token = this.jwtService.generateToken({
+      id: user.id,
+      name: user.name,
+      role: user.role,
+    });
     return {
       message: 'usuario creado con exito!',
       user,
+      token,
     };
   }
 

@@ -36,7 +36,10 @@ export class User {
   })
   isActive: boolean;
 
-  @ManyToOne(() => Role, (role) => role.id, { nullable: false })
+  @ManyToOne(() => Role, (role) => role.id, {
+    nullable: false,
+    eager: true,
+  })
   role: Role;
 
   //CAMPOS PENDIENTES DE AGREGAR   PENDIENTES DE RELACIONES

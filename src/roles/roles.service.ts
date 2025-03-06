@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { FindManyOptions, Not, Repository } from 'typeorm';
 import { PaginationDTo } from '../common/dto/pagination';
+import { ADMIN_ROLE } from '../common/config/constants';
 
 @Injectable()
 export class RolesService {
@@ -27,7 +28,7 @@ export class RolesService {
     const clause: FindManyOptions<Role> = {
       where: {
         isActive: true,
-        name: Not('theone'),
+        name: Not(ADMIN_ROLE),
       },
       take: limit,
       skip: offset,

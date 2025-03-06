@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from './roles/roles.module';
 import { User } from './users/entities/user.entity';
 import { Role } from './roles/entities/role.entity';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,9 +22,17 @@ import { Role } from './roles/entities/role.entity';
       entities: [User, Role],
     }),
 
+    JwtModule.register({
+      // global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '4h' },
+    }),
+
     UsersModule,
 
     RolesModule,
+
+    AuthModule,
   ],
   controllers: [],
   providers: [],
