@@ -14,7 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDTo } from '../common/dto/pagination';
 import { AuthGuard } from '../guards/authguard.guard';
-import { LoggedUser } from 'src/common/decorators/user.decorator';
+import { LoggedUser } from '../common/decorators/user.decorator';
 import { User } from './entities/user.entity';
 import { ADMIN_ROLE } from '../common/config/constants';
 

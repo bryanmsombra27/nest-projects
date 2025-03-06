@@ -1,3 +1,4 @@
+import { Warehouse } from 'src/warehouse/entities/warehouse.entity';
 import { Role } from '../../roles/entities/role.entity';
 import {
   Column,
@@ -42,6 +43,8 @@ export class User {
   })
   role: Role;
 
-  //CAMPOS PENDIENTES DE AGREGAR   PENDIENTES DE RELACIONES
-  //   warehouseId: number;
+  @ManyToOne(() => Warehouse, (warehouse) => warehouse.id, {
+    nullable: true,
+  })
+  warehouse: Warehouse;
 }

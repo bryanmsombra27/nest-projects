@@ -7,7 +7,7 @@ import { User } from './entities/user.entity';
 import { ILike, Repository } from 'typeorm';
 import { PaginationDTo } from '../common/dto/pagination';
 import { AuthService } from '../auth/auth.service';
-import { Role } from 'src/roles/entities/role.entity';
+import { Role } from '../roles/entities/role.entity';
 
 @Injectable()
 export class UsersService {

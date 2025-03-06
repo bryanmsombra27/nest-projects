@@ -6,7 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 
 export interface Credentials {
@@ -46,8 +46,6 @@ export class AuthService {
   }
 
   async signIn(credentials: Credentials) {
-    console.log(credentials, 'CREDENTIALS');
-
     const user = await this.userRepository.findOne({
       where: {
         isActive: true,
@@ -60,7 +58,6 @@ export class AuthService {
         },
       },
     });
-    console.log(user, 'USUARIO');
 
     if (!user) throw new UnauthorizedException('Usuario invalido');
 

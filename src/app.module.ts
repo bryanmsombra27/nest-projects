@@ -3,10 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from './roles/roles.module';
-import { User } from './users/entities/user.entity';
-import { Role } from './roles/entities/role.entity';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { WarehouseModule } from './warehouse/warehouse.module';
 
 @Module({
   imports: [
@@ -19,7 +18,8 @@ import { JwtModule } from '@nestjs/jwt';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: true,
-      entities: [User, Role],
+      autoLoadEntities: true,
+      // entities: [User, Role, Warehouse],
     }),
 
     JwtModule.register({
@@ -33,6 +33,8 @@ import { JwtModule } from '@nestjs/jwt';
     RolesModule,
 
     AuthModule,
+
+    WarehouseModule,
   ],
   controllers: [],
   providers: [],

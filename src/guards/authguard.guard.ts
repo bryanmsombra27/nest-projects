@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException('token invalido');
+      throw new UnauthorizedException('el token es requerido');
     }
     const user: User = this.authService.verifyToken(token);
 
