@@ -4,6 +4,7 @@
 /build
 /mongo
 /postgres
+/db-data
 
 
 # Logs
