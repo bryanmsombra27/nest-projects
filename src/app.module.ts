@@ -9,6 +9,8 @@ import { WarehouseModule } from './warehouse/warehouse.module';
 import { ProvidersModule } from './providers/providers.module';
 import { ProductsModule } from './products/products.module';
 import { StockModule } from './stock/stock.module';
+import { OrderModule } from './order/order.module';
+import { OrderItemsModule } from './order-items/order-items.module';
 
 @Module({
   imports: [
@@ -44,6 +46,10 @@ import { StockModule } from './stock/stock.module';
     ProductsModule,
 
     StockModule,
+
+    OrderModule,
+
+    OrderItemsModule,
   ],
   controllers: [],
   providers: [],
