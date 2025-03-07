@@ -16,5 +16,6 @@ import { WarehouseModule } from 'src/warehouse/warehouse.module';
     ProvidersModule,
     WarehouseModule,
   ],
+  exports: [ProductsService],
 })
 export class ProductsModule {}
