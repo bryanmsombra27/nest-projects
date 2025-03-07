@@ -8,6 +8,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
 import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { Role } from '../roles/entities/role.entity';
+import { Warehouse } from '../warehouse/entities/warehouse.entity';
 
 export interface Credentials {
   email: string;
@@ -17,7 +19,8 @@ export interface Credentials {
 export interface GenerateToken {
   id: number;
   name: string;
-  role: any;
+  role: Role;
+  warehouse: Warehouse | null;
 }
 
 @Injectable()
@@ -56,6 +59,13 @@ export class AuthService {
           id: true,
           name: true,
         },
+        warehouse: {
+          id: true,
+          name: true,
+        },
+      },
+      relations: {
+        warehouse: true,
       },
     });
 
@@ -68,6 +78,7 @@ export class AuthService {
       id: user.id,
       name: user.name,
       role: user.role,
+      warehouse: user.warehouse,
     });
 
     return token;

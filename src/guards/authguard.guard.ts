@@ -23,6 +23,7 @@ export class AuthGuard implements CanActivate {
     }
     const user: User = this.authService.verifyToken(token);
 
+    console.log(user, 'AUTH GUARD USER');
     // if (user.role.name == 'tienda')
     //   throw new UnauthorizedException('acceso denegado');
 

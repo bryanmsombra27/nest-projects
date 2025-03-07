@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { WarehouseModule } from './warehouse/warehouse.module';
 import { ProvidersModule } from './providers/providers.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -38,6 +39,8 @@ import { ProvidersModule } from './providers/providers.module';
     WarehouseModule,
 
     ProvidersModule,
+
+    ProductsModule,
   ],
   controllers: [],
   providers: [],

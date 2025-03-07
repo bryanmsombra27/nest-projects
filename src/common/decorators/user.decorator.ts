@@ -10,6 +10,8 @@ export const LoggedUser = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
     const user: User = request.user;
 
+    console.log(user, 'ROLE USER');
+
     if (!roles.includes(user.role.name))
       throw new UnauthorizedException('Acceso denegado');
 

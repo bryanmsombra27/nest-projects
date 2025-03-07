@@ -9,5 +9,6 @@ import { Warehouse } from './entities/warehouse.entity';
   controllers: [WarehouseController],
   providers: [WarehouseService],
   imports: [AuthModule, TypeOrmModule.forFeature([Warehouse])],
+  exports: [WarehouseService],
 })
 export class WarehouseModule {}

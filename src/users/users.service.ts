@@ -29,18 +29,11 @@ export class UsersService {
       },
     });
 
-    // const userInstance = await this.userRepository.preload({
-    //   ...rest,
-    //   password: passwordHash,
-    //   role: {
-    //     id: 2,
-    //   },
-    // });
-
     const userInstance = this.userRepository.create({
       ...rest,
       password: passwordHash,
       role: role,
+      warehouse: null,
     });
 
     const { password: dbPassword, ...user } =
@@ -50,6 +43,7 @@ export class UsersService {
       id: user.id,
       name: user.name,
       role: user.role,
+      warehouse: null,
     });
     return {
       message: 'usuario creado con exito!',
