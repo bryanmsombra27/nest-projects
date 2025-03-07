@@ -18,5 +18,7 @@ export class AuthService {
     });
 
     if (!decodeToken) throw new UnauthorizedException('Token invalido');
+
+    return decodeToken;
   }
 }
