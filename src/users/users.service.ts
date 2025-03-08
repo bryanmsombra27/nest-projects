@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
-
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../services/prisma.service';
-import { CreateUserResponse } from '../common/api_responses';
 import { AuthService } from '../auth/auth.service';
+
+import { CreateUserResponse } from '../common';
 
 @Injectable()
 export class UsersService {

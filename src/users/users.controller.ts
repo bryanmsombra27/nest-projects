@@ -12,9 +12,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '../guards/auth.guard';
-import { LoggedUser } from '../common/decorators/logged-user.decorator';
-import { ADMIN_ROLE } from '../common/config/constants';
-import { UserPayloadToken } from '../common/api_responses';
+import { LoggedUser, ADMIN_ROLE, UserPayloadToken } from '../common';
 
 @Controller('users')
 @UseGuards(AuthGuard)
