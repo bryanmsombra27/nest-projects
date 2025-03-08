@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 
 interface CommonResponse {
   message: string;
@@ -6,4 +6,7 @@ interface CommonResponse {
 
 export interface DeleteRoleResponse extends CommonResponse {
   role: Role;
+}
+export interface DeleteUserResponse extends CommonResponse {
+  user: Pick<User, 'name' | 'isActive' | 'id'>;
 }

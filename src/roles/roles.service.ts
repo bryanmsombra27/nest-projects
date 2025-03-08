@@ -18,7 +18,7 @@ export class RolesService {
   async create(createRoleDto: CreateRoleDto): Promise<CreateRolResponse> {
     const role = await this.prismaService.role.create({
       data: {
-        name: createRoleDto.name,
+        name: createRoleDto.name.toLowerCase(),
       },
     });
 
