@@ -1,3 +1,7 @@
+interface CommonResponse {
+  message: string;
+}
+
 export interface UserPayloadToken {
   role: {
     name: string;
@@ -6,4 +10,8 @@ export interface UserPayloadToken {
   name: string;
   id: string;
   roleId: string;
+}
+
+export interface LoginResponse extends CommonResponse {
+  token: string;
 }
