@@ -5,6 +5,7 @@ import { PrismaService } from '../services/prisma.service';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { Prisma, Role } from '@prisma/client';
 import {
+  CreateRolResponse,
   DeleteRoleResponse,
   FindAllRoles,
   UpdateRolResponse,
@@ -14,7 +15,7 @@ import {
 export class RolesService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createRoleDto: CreateRoleDto) {
+  async create(createRoleDto: CreateRoleDto): Promise<CreateRolResponse> {
     const role = await this.prismaService.role.create({
       data: {
         name: createRoleDto.name,

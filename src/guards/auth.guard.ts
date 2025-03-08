@@ -19,7 +19,10 @@ export class AuthGuard implements CanActivate {
 
     const token = this.getTokenFromHeader(request);
 
-    if (!token) throw new UnauthorizedException('el token es requerido');
+    if (!token)
+      throw new UnauthorizedException(
+        'el token es requerido para continuar...',
+      );
 
     const user = this.authService.verifyToken(token);
 
@@ -32,7 +35,8 @@ export class AuthGuard implements CanActivate {
     const headers = request.headers as any;
     const token = headers.authorization
       ? headers.authorization?.split(' ')[1]
-      : [];
+      : undefined;
+    console.log(token, 'TOKEN DE PETICION');
 
     return token ?? undefined;
   }
