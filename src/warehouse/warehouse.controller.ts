@@ -13,7 +13,12 @@ import {
 import { WarehouseService } from './warehouse.service';
 import { CreateWarehouseDto } from './dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from './dto/update-warehouse.dto';
-import { LoggedUser, PaginationDto, UserPayloadToken } from '../common';
+import {
+  ADMIN_ROLE,
+  LoggedUser,
+  PaginationDto,
+  UserPayloadToken,
+} from '../common';
 import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('warehouse')
@@ -23,7 +28,7 @@ export class WarehouseController {
 
   @Post()
   create(
-    @LoggedUser() user: UserPayloadToken,
+    @LoggedUser([ADMIN_ROLE]) user: UserPayloadToken,
     @Body() createWarehouseDto: CreateWarehouseDto,
   ) {
     return this.warehouseService.create(createWarehouseDto);
@@ -31,7 +36,7 @@ export class WarehouseController {
 
   @Get()
   findAll(
-    @LoggedUser() user: UserPayloadToken,
+    @LoggedUser([ADMIN_ROLE]) user: UserPayloadToken,
     @Query() paginationDto: PaginationDto,
   ) {
     return this.warehouseService.findAll(paginationDto);
@@ -39,7 +44,7 @@ export class WarehouseController {
 
   @Get(':id')
   findOne(
-    @LoggedUser() user: UserPayloadToken,
+    @LoggedUser([ADMIN_ROLE]) user: UserPayloadToken,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.warehouseService.findOne(id);
@@ -47,7 +52,7 @@ export class WarehouseController {
 
   @Patch(':id')
   update(
-    @LoggedUser() user: UserPayloadToken,
+    @LoggedUser([ADMIN_ROLE]) user: UserPayloadToken,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateWarehouseDto: UpdateWarehouseDto,
   ) {
@@ -56,7 +61,7 @@ export class WarehouseController {
 
   @Delete(':id')
   remove(
-    @LoggedUser() user: UserPayloadToken,
+    @LoggedUser([ADMIN_ROLE]) user: UserPayloadToken,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.warehouseService.remove(id);
