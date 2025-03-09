@@ -31,7 +31,7 @@ export class UsersController {
     @LoggedUser([ADMIN_ROLE]) user: UserPayloadToken,
     @Body() createUserDto: CreateUserDto,
   ) {
-    return this.usersService.create(createUserDto);
+    return this.usersService.create(user, createUserDto);
   }
 
   @Get()

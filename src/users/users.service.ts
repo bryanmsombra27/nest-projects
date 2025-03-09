@@ -16,7 +16,9 @@ import {
   FindAllUsers,
   PaginationDto,
   UpdateUserResponse,
+  UserPayloadToken,
 } from '../common';
+import e from 'express';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +27,10 @@ export class UsersService {
     private authService: AuthService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
+  async create(
+    user: UserPayloadToken,
+    createUserDto: CreateUserDto,
+  ): Promise<CreateUserResponse> {
     const { email, name, password, phone } = createUserDto;
 
     try {
@@ -37,6 +42,14 @@ export class UsersService {
           name: 'tienda',
         },
       });
+      const warehouse = await this.prismaService.warehouse.create({
+        data: {
+          name: `${name.toLowerCase()} almacen`,
+        },
+        select: {
+          id: true,
+        },
+      });
 
       const user = await this.prismaService.user.create({
         data: {
@@ -45,9 +58,16 @@ export class UsersService {
           password: hashedPassword,
           phone,
           roleId: storeRole.id,
+          warehouseId: warehouse.id,
         },
         include: {
           role: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          warehouse: {
             select: {
               id: true,
               name: true,
@@ -60,6 +80,7 @@ export class UsersService {
         name: user.name,
         role: user.role,
         roleId: user.roleId,
+        warehouseId: user.warehouseId,
       });
 
       return {

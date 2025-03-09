@@ -48,7 +48,14 @@ export class AuthService {
         roleId: true,
         id: true,
         name: true,
+        warehouseId: true,
         role: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+        warehouse: {
           select: {
             name: true,
             id: true,
@@ -67,6 +74,7 @@ export class AuthService {
       name: user.name,
       role: user.role,
       roleId: user.roleId,
+      warehouseId: user.warehouseId,
     });
 
     return {

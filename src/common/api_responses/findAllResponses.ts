@@ -1,4 +1,4 @@
-import { Role, User } from '@prisma/client';
+import { Role, User, Warehouse } from '@prisma/client';
 
 interface PaginationInfo {
   currentPage: number;
@@ -17,4 +17,8 @@ export interface FindAllRoles extends FindAllCommonResponse {
 
 export interface FindAllUsers extends FindAllCommonResponse {
   users: User[];
+}
+
+export interface FindAllWarehouses extends FindAllCommonResponse {
+  warehouses: Warehouse[];
 }
