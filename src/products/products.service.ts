@@ -20,15 +20,27 @@ export class ProductsService {
     user: UserPayloadToken,
     createProductDto: CreateProductDto,
   ): Promise<CreateProductResponse> {
-    const { name, price } = createProductDto;
+    const { name, price, quantity } = createProductDto;
 
     const product = await this.prismaService.product.create({
       data: {
         price,
         name: name.toLowerCase(),
         warehouseId: user.warehouseId,
+        Stock: {
+          create: {
+            quantity,
+          },
+        },
       },
     });
+
+    // await this.prismaService.stock.create({
+    //   data: {
+    //     quantity,
+    //     productId: product.id,
+    //   },
+    // });
 
     return {
       message: 'Producto creado con exito!',

@@ -92,7 +92,7 @@ model Product {
 model Stock {
    id  String @id @default(uuid())
    quantity Int
-   commit Int
+   commit Int @default(0)
    isActive Boolean @default(true) 
  
  //RELACIONES
