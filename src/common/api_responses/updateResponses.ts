@@ -1,4 +1,4 @@
-import { Role, User, Warehouse } from '@prisma/client';
+import { Provider, Role, User, Warehouse } from '@prisma/client';
 
 interface CommonResponse {
   message: string;
@@ -11,6 +11,11 @@ export interface UpdateRolResponse extends CommonResponse {
 export interface UpdateUserResponse extends CommonResponse {
   user: User;
 }
+
 export interface UpdateWarehouseResponse extends CommonResponse {
   warehouse: Warehouse;
+}
+
+export interface UpdateProviderResponse extends CommonResponse {
+  provider: Provider;
 }
