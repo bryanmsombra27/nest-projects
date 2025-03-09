@@ -84,6 +84,9 @@ model Product {
   provider Provider? @relation(fields: [providerId],references: [id])
   providerId String?
 
+
+
+
   Stock Stock[]
 
   OrderItem OrderItem[]

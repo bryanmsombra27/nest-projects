@@ -1,4 +1,11 @@
-import { Product, Provider, Role, User, Warehouse } from '@prisma/client';
+import {
+  Order,
+  Product,
+  Provider,
+  Role,
+  User,
+  Warehouse,
+} from '@prisma/client';
 
 interface CommonResponse {
   message: string;
@@ -20,4 +27,7 @@ export interface DeleteProviderResponse extends CommonResponse {
 }
 export interface DeleteProductResponse extends CommonResponse {
   product: Product;
+}
+export interface DeleteOrderResponse extends CommonResponse {
+  order: Order;
 }

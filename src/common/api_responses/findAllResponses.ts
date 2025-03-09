@@ -1,4 +1,11 @@
-import { Product, Provider, Role, User, Warehouse } from '@prisma/client';
+import {
+  Order,
+  Product,
+  Provider,
+  Role,
+  User,
+  Warehouse,
+} from '@prisma/client';
 
 interface PaginationInfo {
   currentPage: number;
@@ -29,4 +36,8 @@ export interface FindAllProviders extends FindAllCommonResponse {
 
 export interface FindAllProducts extends FindAllCommonResponse {
   products: Product[];
+}
+
+export interface FindAllOrders extends FindAllCommonResponse {
+  orders: Order[];
 }
