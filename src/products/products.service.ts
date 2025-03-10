@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -11,10 +15,15 @@ import {
   UpdateProductResponse,
   UserPayloadToken,
 } from '../common';
+import { ProductAssignationDto } from './dto/product-assignation.dto';
+import { OrdersService } from '../orders/orders.service';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly ordersService: OrdersService,
+  ) {}
 
   async create(
     user: UserPayloadToken,
@@ -26,7 +35,7 @@ export class ProductsService {
       data: {
         price,
         name: name.toLowerCase(),
-        warehouseId: user.warehouseId,
+        // warehouseId: user.warehouseId,
         stock: {
           create: {
             quantity,
@@ -148,6 +157,58 @@ export class ProductsService {
     return {
       message: 'Producto actualizado con exito!',
       product,
+    };
+  }
+
+  async productAssignation(
+    user: UserPayloadToken,
+    productAssigationDto: ProductAssignationDto,
+  ) {
+    const { products } = productAssigationDto;
+
+    const productIds = products.map((product) => product.productId);
+
+    const productsInDB = await this.prismaService.product.findMany({
+      where: {
+        isActive: true,
+        id: {
+          in: productIds,
+        },
+      },
+      include: {
+        stock: {
+          select: {
+            id: true,
+            quantity: true,
+            commit: true,
+            productId: true,
+          },
+        },
+      },
+    });
+    if (products.length !== productsInDB.length)
+      throw new BadRequestException('Uno o varios productos no existen');
+
+    await this.ordersService.create(user, { products });
+
+    const productAssignationInstances = [];
+
+    for (const product of products) {
+      productAssignationInstances.push({
+        productId: product.productId,
+        warehouseId: user.warehouseId,
+      });
+    }
+    await this.prismaService.productAssignation.createMany({
+      data: productAssignationInstances,
+    });
+
+    await this.prismaService.stockStore.createMany({
+      data: products,
+    });
+
+    return {
+      message: 'Productos agregados al almacen con exito!',
     };
   }
 }

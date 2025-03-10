@@ -58,7 +58,8 @@ model Warehouse {
   // RELACIONES
    User User[]
 
-   Product Product[]
+  productAssination ProductAssignation?
+
 }
 
 model Provider {
@@ -77,18 +78,17 @@ model Product {
   image String?
   isActive Boolean @default(true) 
 
-// RELACIONES
-  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
-  warehouseId String
-
-  provider Provider? @relation(fields: [providerId],references: [id])
-  providerId String?
-
-
-
-
+  // RELACIONES ONE-TO-ONE
   stock Stock? 
+  assignation ProductAssignation?
+  stockStore StockStore?
 
+
+// RELACIONES MANY-TO-ONE
+  provider Provider? @relation(fields: [providerId],references: [id])
+  providerId String?  
+
+//  RELACIONES ONE-TO-MANY
   OrderItem OrderItem[]
 }
 
@@ -106,7 +106,7 @@ model Order {
     id  String @id @default(uuid())
     status Status
     isActive Boolean @default(true)
-
+    totalItems Int @default(0)
  //RELACIONES
     OrderItems OrderItem[]
 }
@@ -126,3 +126,27 @@ model OrderItem {
   orderId String
 }
 
+model ProductAssignation {
+  id  String @id @default(uuid())
+
+ //RELACIONES
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @unique // Clave foránea única
+
+  warehouse   Warehouse  @relation(fields: [warehouseId], references: [id])
+  warehouseId String   @unique // 
+}
+
+model StockStore {
+   id  String @id @default(uuid())
+   quantity Int
+   commit Int @default(0)
+   isActive Boolean @default(true) 
+
+  //  one to one
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @unique // 
+
+ 
+
+}

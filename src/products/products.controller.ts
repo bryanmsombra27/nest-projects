@@ -18,8 +18,10 @@ import {
   ADMIN_ROLE,
   LoggedUser,
   PaginationDto,
+  STORE_ROLE,
   UserPayloadToken,
 } from '../common';
+import { ProductAssignationDto } from './dto/product-assignation.dto';
 
 @Controller('products')
 @UseGuards(AuthGuard)
@@ -65,5 +67,13 @@ export class ProductsController {
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.productsService.remove(id);
+  }
+
+  @Post('assignation')
+  productAssignation(
+    @LoggedUser([STORE_ROLE]) user: UserPayloadToken,
+    @Body() productAssigationDto: ProductAssignationDto,
+  ) {
+    return this.productsService.productAssignation(user, productAssigationDto);
   }
 }

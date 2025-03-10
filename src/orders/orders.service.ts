@@ -29,7 +29,7 @@ export class OrdersService {
     const productsInDB = await this.prismaService.product.findMany({
       where: {
         isActive: true,
-        warehouseId: user.warehouseId,
+        // warehouseId: user.warehouseId,
 
         id: {
           in: productsIds,
@@ -53,6 +53,7 @@ export class OrdersService {
 
     const orderItemsInstances = [];
     const updateStockInstances = [];
+    let totalItems = 0;
 
     for (const product of products) {
       const productInDB = productsInDB.find(
@@ -77,6 +78,7 @@ export class OrdersService {
           },
         }),
       );
+      totalItems += product.quantity;
 
       orderItemsInstances.push({
         quantity: product.quantity,
@@ -88,6 +90,7 @@ export class OrdersService {
 
     const order = await this.prismaService.order.create({
       data: {
+        totalItems,
         status: 'PENDING',
         OrderItems: {
           createMany: {
