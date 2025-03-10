@@ -87,7 +87,7 @@ model Product {
 
 
 
-  Stock Stock[]
+  stock Stock? 
 
   OrderItem OrderItem[]
 }
@@ -99,8 +99,8 @@ model Stock {
    isActive Boolean @default(true) 
  
  //RELACIONES
-  product Product @relation(fields: [productId], references: [id])
-  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @unique // Clave foránea única
 }
 model Order {
     id  String @id @default(uuid())

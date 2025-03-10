@@ -35,48 +35,53 @@ export class OrdersService {
           in: productsIds,
         },
       },
+      include: {
+        stock: {
+          select: {
+            id: true,
+            quantity: true,
+            commit: true,
+          },
+        },
+      },
     });
+
     if (products.length !== productsInDB.length)
       throw new BadRequestException(
         'Error al crear la orden, uno o varios productos no existen',
       );
-    const stocks = await this.prismaService.stock.findMany({
-      where: {
-        isActive: true,
-        productId: {
-          in: productsIds,
-        },
-      },
-      include: {
-        product: true,
-      },
-    });
+
     const orderItemsInstances = [];
     const updateStockInstances = [];
 
     for (const product of products) {
-      const stock = stocks.find((item) => item.productId == product.productId);
+      const productInDB = productsInDB.find(
+        (item) => item.id == product.productId,
+      );
 
-      if (product.quantity > stock.quantity - stock.commit)
+      if (
+        product.quantity >
+        productInDB.stock.quantity - productInDB.stock.commit
+      )
         throw new BadRequestException(
-          `El producto ${stock.product.name} no tiene stock suficiente para surtir, la orden fue cancelada`,
+          `El producto ${productInDB.name} no tiene stock suficiente para surtir, la orden fue cancelada`,
         );
       updateStockInstances.push(
         this.prismaService.stock.update({
           where: {
             isActive: true,
-            id: stock.id,
+            id: productInDB.stock.id,
           },
           data: {
-            commit: stock.commit + product.quantity,
+            commit: productInDB.stock.commit + product.quantity,
           },
         }),
       );
 
       orderItemsInstances.push({
         quantity: product.quantity,
-        price: stock.product.price,
-        productId: stock.productId,
+        price: productInDB.price,
+        productId: productInDB.id,
       });
     }
     await Promise.all(updateStockInstances);

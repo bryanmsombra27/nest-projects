@@ -27,7 +27,7 @@ export class ProductsService {
         price,
         name: name.toLowerCase(),
         warehouseId: user.warehouseId,
-        Stock: {
+        stock: {
           create: {
             quantity,
           },
