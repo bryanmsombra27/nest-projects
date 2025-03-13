@@ -81,11 +81,8 @@ export class ProductsService {
           contains: search.toLowerCase(),
         },
       };
-      countClause.where = {
-        ...countClause,
-        name: {
-          contains: search.toLowerCase(),
-        },
+      countClause.where.name = {
+        contains: search.toLowerCase(),
       };
     }
     const total = await this.prismaService.product.count(countClause);

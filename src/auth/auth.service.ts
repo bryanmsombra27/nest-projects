@@ -19,21 +19,24 @@ export class AuthService {
   generateToken(payload: UserPayloadToken) {
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
+      expiresIn: '10h',
     });
 
     return token;
   }
 
   verifyToken(token: string) {
-    const decodeToken = this.jwtService.verify(token, {
-      secret: process.env.JWT_SECRET,
-    });
+    try {
+      const decodeToken = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
 
-    if (!decodeToken) throw new UnauthorizedException('Token invalido');
+      if (!decodeToken) throw new UnauthorizedException('Token invalido');
 
-    console.log(decodeToken, 'TOKEN DECODIFICADO');
-
-    return decodeToken;
+      return decodeToken;
+    } catch (error) {
+      throw new UnauthorizedException('Inicia sesion para continuar...');
+    }
   }
 
   async login(loginDto: LoginDto): Promise<LoginResponse> {

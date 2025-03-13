@@ -10,6 +10,7 @@ import {
   UpdateWarehouseResponse,
 } from '../common';
 import { Prisma } from '@prisma/client';
+import { contains } from 'class-validator';
 
 @Injectable()
 export class WarehouseService {
@@ -55,11 +56,9 @@ export class WarehouseService {
           contains: search.toLowerCase(),
         },
       };
-      countClause.where = {
-        ...countClause,
-        name: {
-          contains: search.toLowerCase(),
-        },
+
+      countClause.where.name = {
+        contains: search.toLowerCase(),
       };
     }
     const total = await this.prismaService.warehouse.count(countClause);

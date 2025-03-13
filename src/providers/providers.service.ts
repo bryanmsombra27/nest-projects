@@ -59,14 +59,12 @@ export class ProvidersService {
           contains: search.toLowerCase(),
         },
       };
-      countClause.where = {
-        ...countClause,
-        name: {
-          contains: search.toLowerCase(),
-        },
-        address: {
-          contains: search.toLowerCase(),
-        },
+
+      countClause.where.name = {
+        contains: search.toLowerCase(),
+      };
+      countClause.where.address = {
+        contains: search.toLowerCase(),
       };
     }
     const total = await this.prismaService.provider.count(countClause);

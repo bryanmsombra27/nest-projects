@@ -127,17 +127,15 @@ export class UsersService {
           contains: search.toLowerCase(),
         },
       };
-      countClause.where = {
-        ...countClause,
-        name: {
-          contains: search.toLowerCase(),
-        },
-        email: {
-          contains: search.toLowerCase(),
-        },
-        phone: {
-          contains: search,
-        },
+
+      countClause.where.name = {
+        contains: search.toLowerCase(),
+      };
+      countClause.where.email = {
+        contains: search.toLowerCase(),
+      };
+      countClause.where.phone = {
+        contains: search.toLowerCase(),
       };
     }
     const total = await this.prismaService.user.count(countClause);
