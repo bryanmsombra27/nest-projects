@@ -81,6 +81,7 @@ export class UsersService {
         role: user.role,
         roleId: user.roleId,
         warehouseId: user.warehouseId,
+        warehouse: user.warehouse,
       });
 
       return {

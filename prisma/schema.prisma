@@ -48,6 +48,8 @@ model User {
   warehouse Warehouse? @relation(fields: [warehouseId], references: [id])
   warehouseId String? 
 
+  order Order[]
+
 } 
 
 model Warehouse {
@@ -81,6 +83,8 @@ model Product {
   // RELACIONES ONE-TO-ONE
   stock Stock? 
   assignation ProductAssignation?
+
+
   stockStore StockStore?
 
 
@@ -90,6 +94,8 @@ model Product {
 
 //  RELACIONES ONE-TO-MANY
   OrderItem OrderItem[]
+
+  ProductAssignation ProductAssignation[] @relation(name: "ProductAssignationToProducts")
 }
 
 model Stock {
@@ -109,6 +115,10 @@ model Order {
     totalItems Int @default(0)
  //RELACIONES
     OrderItems OrderItem[]
+
+  User User @relation(fields: [userId],references: [id])
+  userId String 
+
 }
 
 
@@ -135,6 +145,10 @@ model ProductAssignation {
 
   warehouse   Warehouse  @relation(fields: [warehouseId], references: [id])
   warehouseId String   @unique // 
+
+  productTotal Product @relation(name:"ProductAssignationToProducts",map: "product_total" ,fields: [productId], references: [id])
+  
+
 }
 
 model StockStore {
@@ -147,6 +161,5 @@ model StockStore {
   product   Product  @relation(fields: [productId], references: [id])
   productId String   @unique // 
 
- 
 
 }

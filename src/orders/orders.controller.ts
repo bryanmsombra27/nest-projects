@@ -18,6 +18,7 @@ import {
   ADMIN_ROLE,
   LoggedUser,
   PaginationDto,
+  STORE_ROLE,
   UserPayloadToken,
 } from '../common';
 
@@ -28,7 +29,7 @@ export class OrdersController {
 
   @Post()
   create(
-    @LoggedUser([ADMIN_ROLE]) user: UserPayloadToken,
+    @LoggedUser([ADMIN_ROLE, STORE_ROLE]) user: UserPayloadToken,
     @Body() createOrderDto: CreateOrderDto,
   ) {
     return this.ordersService.create(user, createOrderDto);

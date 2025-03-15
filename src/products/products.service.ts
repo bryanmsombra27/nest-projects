@@ -65,6 +65,19 @@ export class ProductsService {
       where: {
         isActive: true,
       },
+      include: {
+        ProductAssignation: {
+          select: {
+            id: true,
+          },
+        },
+        stock: {
+          select: {
+            quantity: true,
+            commit: true,
+          },
+        },
+      },
       skip: offset,
       take: limit,
     };
@@ -118,13 +131,18 @@ export class ProductsService {
     id: string,
     updateProductDto: UpdateProductDto,
   ): Promise<UpdateProductResponse> {
-    const { name, price } = updateProductDto;
+    const { name, price, quantity } = updateProductDto;
     const productPrev = await this.findOne(id);
 
     const product = await this.prismaService.product.update({
       data: {
         name: name ? name.toLowerCase() : productPrev.name,
         price: price ?? productPrev.price,
+        stock: {
+          update: {
+            quantity: quantity,
+          },
+        },
       },
       where: {
         isActive: true,

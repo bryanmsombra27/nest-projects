@@ -46,6 +46,7 @@ export class AuthService {
       where: {
         email,
       },
+
       select: {
         password: true,
         roleId: true,
@@ -78,6 +79,7 @@ export class AuthService {
       role: user.role,
       roleId: user.roleId,
       warehouseId: user.warehouseId,
+      warehouse: user.warehouse,
     });
 
     return {

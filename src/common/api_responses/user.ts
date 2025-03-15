@@ -7,6 +7,10 @@ export interface UserPayloadToken {
     name: string;
     id: string;
   };
+  warehouse: {
+    name: string;
+    id: string;
+  };
   name: string;
   id: string;
   roleId: string;

@@ -92,12 +92,20 @@ export class OrdersService {
       data: {
         totalItems,
         status: 'PENDING',
+        userId: user.id,
         OrderItems: {
           createMany: {
             data: orderItemsInstances,
           },
         },
       },
+      // include: {
+      //   User: {
+      //     select: {
+      //       name: true,
+      //     },
+      //   },
+      // },
     });
 
     return {
@@ -114,6 +122,14 @@ export class OrdersService {
       where: {
         isActive: true,
       },
+      include: {
+        User: {
+          select: {
+            name: true,
+          },
+        },
+      },
+
       skip: offset,
       take: limit,
     };
@@ -126,8 +142,20 @@ export class OrdersService {
     if (search) {
       clause.where = {
         ...clause.where,
+        User: {
+          name: {
+            contains: search.toLowerCase(),
+          },
+        },
       };
 
+      countClause.where = {
+        User: {
+          name: {
+            contains: search.toLowerCase(),
+          },
+        },
+      };
       // countClause.where = {
       //   ...countClause,
 
