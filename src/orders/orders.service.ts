@@ -128,6 +128,18 @@ export class OrdersService {
             name: true,
           },
         },
+        OrderItems: {
+          select: {
+            id: true,
+            price: true,
+            quantity: true,
+            product: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
 
       skip: offset,
@@ -195,6 +207,8 @@ export class OrdersService {
     updateOrderDto: UpdateOrderDto,
   ): Promise<UpdateOrderResponse> {
     const orderPrev = await this.findOne(id);
+    console.log(updateOrderDto.status, 'STATUS ACTUALIZADONSE A ');
+
     const order = await this.prismaService.order.update({
       data: {
         status: updateOrderDto.status ?? orderPrev.status,
