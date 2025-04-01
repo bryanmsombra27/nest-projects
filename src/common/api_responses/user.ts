@@ -19,4 +19,5 @@ export interface UserPayloadToken {
 
 export interface LoginResponse extends CommonResponse {
   token: string;
+  role: string;
 }

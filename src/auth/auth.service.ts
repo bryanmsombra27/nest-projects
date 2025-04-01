@@ -85,6 +85,7 @@ export class AuthService {
     return {
       message: 'Login exitoso!',
       token,
+      role: user.role.name,
     };
   }
 }

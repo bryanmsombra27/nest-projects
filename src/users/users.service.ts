@@ -18,7 +18,6 @@ import {
   UpdateUserResponse,
   UserPayloadToken,
 } from '../common';
-import e from 'express';
 
 @Injectable()
 export class UsersService {
@@ -108,6 +107,14 @@ export class UsersService {
       },
       skip: offset,
       take: limit,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        warehouse: true,
+        role: true,
+      },
     };
     const countClause: Prisma.UserCountArgs = {
       where: {

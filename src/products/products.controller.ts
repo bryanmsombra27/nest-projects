@@ -38,7 +38,7 @@ export class ProductsController {
 
   @Get()
   findAll(
-    @LoggedUser([ADMIN_ROLE]) user: UserPayloadToken,
+    @LoggedUser([ADMIN_ROLE, STORE_ROLE]) user: UserPayloadToken,
     @Query() paginationDto: PaginationDto,
   ) {
     return this.productsService.findAll(paginationDto);
