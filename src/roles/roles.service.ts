@@ -111,4 +111,21 @@ export class RolesService {
 
     return { message: 'Rol eliminado con exito', rol };
   }
+  async delete(id: string) {
+    const rol = await this.prismaService.rol.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!rol)
+      throw new NotFoundException('El rol ya fue eliminado del sistema');
+
+    await this.prismaService.rol.delete({
+      where: {
+        id,
+      },
+    });
+
+    return { message: 'Rol eliminado con exito' };
+  }
 }

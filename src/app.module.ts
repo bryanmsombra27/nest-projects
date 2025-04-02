@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './common/services/prisma/prisma.service';
 import { RolesModule } from './roles/roles.module';
+import { PersonalModule } from './personal/personal.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { RolesModule } from './roles/roles.module';
     }),
     AuthModule,
     RolesModule,
+    PersonalModule,
   ],
   controllers: [],
   providers: [PrismaService],

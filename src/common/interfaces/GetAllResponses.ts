@@ -1,7 +1,8 @@
-import { Rol } from '@prisma/client';
+import { Personal, Rol } from '@prisma/client';
 
 interface CommonResponse {
   message: string;
+  meta: Meta;
 }
 interface Meta {
   totalPages: number;
@@ -11,5 +12,7 @@ interface Meta {
 
 export interface GetAllRoles extends CommonResponse {
   roles: Rol[];
-  meta: Meta;
+}
+export interface GetAllPersonal extends CommonResponse {
+  personal: Personal[];
 }
