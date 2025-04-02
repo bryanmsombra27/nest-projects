@@ -7,17 +7,7 @@ import { RolesModule } from './roles/roles.module';
 import { PersonalModule } from './personal/personal.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    JwtModule.register({
-      // global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '10h' },
-    }),
-    AuthModule,
-    RolesModule,
-    PersonalModule,
-  ],
+  imports: [ConfigModule.forRoot(), AuthModule, RolesModule, PersonalModule],
   controllers: [],
   providers: [PrismaService],
 })

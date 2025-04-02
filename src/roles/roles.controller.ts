@@ -7,13 +7,16 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { PaginationDto } from '../common/dto/paginationDto';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('roles')
+@UseGuards(AuthGuard)
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 

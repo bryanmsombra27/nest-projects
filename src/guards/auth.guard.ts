@@ -32,7 +32,7 @@ export class AuthGuard implements CanActivate {
     const headers = request.headers as any;
     const token = headers.authorization
       ? headers.authorization?.split(' ')[1]
-      : [];
+      : '';
 
     return token ?? undefined;
   }
