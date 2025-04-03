@@ -39,24 +39,25 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    const personal = await this.prismaService.personal.findFirst({
-      where: {
-        email: loginDto.email,
-      },
+    const { password, ...personal } =
+      await this.prismaService.personal.findFirst({
+        where: {
+          email: loginDto.email,
+        },
 
-      include: {
-        rol: {
-          select: {
-            id: true,
-            name: true,
+        include: {
+          rol: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-    });
+      });
 
     if (!personal) throw new NotFoundException('Credenciales invalidas');
 
-    if (!(await compare(loginDto.password, personal.password))) {
+    if (!(await compare(loginDto.password, password))) {
       throw new BadRequestException('Credenciales incorrectas');
     }
     const personalToken: EncodedPayloadToken = {
@@ -72,6 +73,7 @@ export class AuthService {
     return {
       message: 'Login exitoso!',
       token,
+      personal,
     };
   }
 }
