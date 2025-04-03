@@ -5,3 +5,5 @@ export interface FindRoleResponse {
 }
 
 export type FindPersonalResponse = Omit<Personal, 'password'>;
+
+export type LoggedUser = Omit<Personal, 'password'>;

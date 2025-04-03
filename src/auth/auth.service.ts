@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './authDto';
 import { PrismaService } from '../common/services/prisma/prisma.service';
 import { compare } from 'bcryptjs';
+import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
   ) {}
-  generateToken(payload: any) {
+  generateToken(payload: EncodedPayloadToken) {
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
     });
@@ -58,7 +59,7 @@ export class AuthService {
     if (!(await compare(loginDto.password, personal.password))) {
       throw new BadRequestException('Credenciales incorrectas');
     }
-    const personalToken = {
+    const personalToken: EncodedPayloadToken = {
       id: personal.id,
       nombre: personal.nombre,
       email: personal.email,

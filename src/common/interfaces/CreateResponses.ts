@@ -1,4 +1,4 @@
-import { Personal, Rol } from '@prisma/client';
+import { Personal, Rol, Usuario } from '@prisma/client';
 
 interface CommonResponse {
   message: string;
@@ -10,4 +10,7 @@ export interface CreateRolResponse extends CommonResponse {
 
 export interface CreatePersonalResponse extends CommonResponse {
   personal: Omit<Personal, 'password'>;
+}
+export interface CreateUsuarioResponse extends CommonResponse {
+  usuario: Usuario;
 }
