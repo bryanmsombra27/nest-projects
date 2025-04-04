@@ -9,6 +9,8 @@ export const LoggedUser = createParamDecorator(
   (roles: string[], ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const user = request.user as EncodedPayloadToken;
+
+    console.log(user, 'USUARIO LOGUEADO ACTUALMENTE');
     const role = user.rol_name;
     if (!roles.includes(role)) {
       throw new UnauthorizedException('accesso denegado');

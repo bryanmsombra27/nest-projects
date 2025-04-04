@@ -67,6 +67,9 @@ export class AuthService {
       rol_id: personal.rolId,
       rol_name: personal.rol.name,
     };
+    console.log(personal, 'LOGGED USER');
+
+    console.log(personalToken, 'PAYLOAD TOKEN');
 
     const token = this.generateToken(personalToken);
 

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,8 +16,10 @@ import { PaginationDto } from 'src/common/dto/paginationDto';
 import { LoggedUser } from 'src/common/decorators/logged-user/logged-user.decorator';
 import { ValidRoles } from 'src/common/config/constants';
 import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('user')
+@UseGuards(AuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

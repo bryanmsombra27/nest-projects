@@ -20,14 +20,21 @@ export class UserService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<CreateUsuarioResponse> {
-    const usuario = await this.prismaService.usuario.create({
-      data: createUserDto,
-    });
+    try {
+      const usuario = await this.prismaService.usuario.create({
+        data: createUserDto,
+      });
 
-    return {
-      message: 'Usuario creado con exito!',
-      usuario,
-    };
+      return {
+        message: 'Usuario creado con exito!',
+        usuario,
+      };
+    } catch (error) {
+      if (error.code == 'P2002')
+        throw new BadRequestException('El email ya existe!');
+
+      throw new BadRequestException('No fue posible crear el usuario');
+    }
   }
 
   async findAll(paginationDto: PaginationDto): Promise<GetAllUsuarios> {
