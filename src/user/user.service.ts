@@ -42,55 +42,80 @@ export class UserService {
     const limit = paginationDto.limit ?? 10;
     const offset = (+page - 1) * limit;
 
+    console.log('SE DISPARO PETICION GET ALL USERS');
+
     const clause: Prisma.UsuarioFindManyArgs = {
-      where: {
-        isActive: true,
-      },
+      // where: {
+      //   isActive: true,
+      // },
       take: limit,
       skip: offset,
     };
     const countClause: Prisma.UsuarioCountArgs = {
-      where: {
-        isActive: true,
-      },
+      // where: {
+      //   isActive: true,
+      // },
     };
 
     if (paginationDto.search) {
       clause.where = {
-        isActive: true,
-        nombre: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
-        email: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
-        rfc: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
-        direccion: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
-        telefono: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
+        OR: [
+          {
+            nombre: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            email: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            rfc: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            direccion: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            telefono: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+        ],
       };
       countClause.where = {
-        isActive: true,
-        nombre: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
-        email: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
-        rfc: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
-        direccion: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
-        telefono: {
-          startsWith: paginationDto.search.toLowerCase(),
-        },
+        // isActive: true,
+        OR: [
+          {
+            nombre: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            email: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            rfc: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            direccion: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            telefono: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+        ],
       };
     }
 
