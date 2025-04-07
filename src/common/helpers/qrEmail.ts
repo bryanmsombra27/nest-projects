@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 
 export const opt = {
   errorCorrectionLevel: 'H',
@@ -9,12 +9,17 @@ export const opt = {
   // }
 };
 
-export const transport = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+export const transport = createTransport({
+  host: 'smtp.ethereal.email',
   port: 587,
   auth: {
-    user: 'projectos631@gmail.com',
-    pass: 'awtmcbvffxlyocxw',
+    user: 'sandra.ferry72@ethereal.email',
+    pass: 'rQBCTVBwcX7VZBJPk2',
+  },
+  requireTLS: false,
+  secure: false,
+  tls: {
+    rejectUnauthorized: false,
   },
 });
 

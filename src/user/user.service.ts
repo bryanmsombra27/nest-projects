@@ -12,7 +12,7 @@ import { Prisma, Usuario } from '@prisma/client';
 import { GetAllUsuarios } from 'src/common/interfaces/GetAllResponses';
 import { UpdateUsuarioResponse } from 'src/common/interfaces/UpdateResponses';
 import { DeleteUsuarioResponse } from 'src/common/interfaces/DeleteResponses';
-import QRCode from 'qrcode';
+import { toDataURL } from 'qrcode';
 import { opt, qrEmail, transport } from 'src/common/helpers/qrEmail';
 
 @Injectable()
@@ -41,8 +41,6 @@ export class UserService {
     const page = paginationDto.page ?? 1;
     const limit = paginationDto.limit ?? 10;
     const offset = (+page - 1) * limit;
-
-    console.log('SE DISPARO PETICION GET ALL USERS');
 
     const clause: Prisma.UsuarioFindManyArgs = {
       // where: {
@@ -214,6 +212,28 @@ export class UserService {
     };
   }
 
+  async activate(id: string) {
+    const user = await this.prismaService.usuario.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!user) throw new NotFoundException('El usuario no fue encontrado');
+
+    await this.prismaService.usuario.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: true,
+      },
+    });
+
+    return {
+      message: 'Usuario activado con exito!',
+    };
+  }
+
   async generateQRUser(id: string) {
     const usuario = await this.findOne(id);
 
@@ -238,6 +258,8 @@ export class UserService {
           linkqr: url,
         },
       });
+      await transport.sendMail(qrEmail(usuario.email, usuario.nombre, url));
+
       return {
         message:
           'El codigo QR fue generado con exito, se ha enviado al correo!',
@@ -270,9 +292,12 @@ export class UserService {
 
   private async generateQR(text: string) {
     try {
-      const url = await QRCode.toDataURL(text);
+      console.log(await toDataURL(text), 'QR CODE GENERATE');
+
+      const url = await toDataURL(text);
       return url;
     } catch (error) {
+      console.log(error, 'QR ERROR');
       throw new BadRequestException('EL codigo QR no pudo ser generado');
     }
   }

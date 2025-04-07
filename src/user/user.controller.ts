@@ -56,7 +56,7 @@ export class UserController {
     @LoggedUser([ValidRoles.ROOT, ValidRoles.ADMIN, ValidRoles.AUX])
     user: EncodedPayloadToken,
   ) {
-    return this.userService.findOne(id);
+    return this.userService.generateQRUser(id);
   }
 
   @Patch(':id')
@@ -85,5 +85,14 @@ export class UserController {
     user: EncodedPayloadToken,
   ) {
     return this.userService.delete(id);
+  }
+
+  @Patch('activate/:id')
+  activate(
+    @Param('id') id: string,
+    @LoggedUser([ValidRoles.ROOT, ValidRoles.ADMIN])
+    user: EncodedPayloadToken,
+  ) {
+    return this.userService.activate(id);
   }
 }
