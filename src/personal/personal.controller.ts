@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PersonalService } from './personal.service';
 import { CreatePersonalDto } from './dto/create-personal.dto';
@@ -15,8 +16,10 @@ import { PaginationDto } from 'src/common/dto/paginationDto';
 import { LoggedUser } from 'src/common/decorators/logged-user/logged-user.decorator';
 import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
 import { ValidRoles } from 'src/common/config/constants';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('personal')
+@UseGuards(AuthGuard)
 export class PersonalController {
   constructor(private readonly personalService: PersonalService) {}
 
@@ -67,5 +70,14 @@ export class PersonalController {
     @LoggedUser([ValidRoles.ROOT]) user: EncodedPayloadToken,
   ) {
     return this.personalService.delete(id);
+  }
+
+  @Patch('activate/:id')
+  activate(
+    @Param('id') id: string,
+    @LoggedUser([ValidRoles.ROOT])
+    user: EncodedPayloadToken,
+  ) {
+    return this.personalService.activate(id);
   }
 }

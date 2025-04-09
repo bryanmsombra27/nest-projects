@@ -53,7 +53,12 @@ export class PersonalService {
 
     const clause: Prisma.PersonalFindManyArgs = {
       where: {
-        isActive: true,
+        // isActive: true,
+        rol: {
+          name: {
+            not: 'root',
+          },
+        },
       },
       take: limit,
       skip: offset,
@@ -74,21 +79,47 @@ export class PersonalService {
     };
     const countClause: Prisma.PersonalCountArgs = {
       where: {
-        isActive: true,
+        // isActive: true,
       },
     };
     if (paginationDto.search) {
       clause.where = {
-        isActive: true,
-        nombre: { startsWith: paginationDto.search.toLowerCase() },
-        email: { startsWith: paginationDto.search.toLowerCase() },
-        telefono: { startsWith: paginationDto.search.toLowerCase() },
+        nombre: {
+          not: 'root',
+        },
+        OR: [
+          {
+            nombre: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            email: { contains: paginationDto.search.toLowerCase() },
+          },
+          {
+            telefono: { contains: paginationDto.search.toLowerCase() },
+          },
+        ],
+        // isActive: true,
       };
       clause.where = {
-        isActive: true,
-        nombre: { startsWith: paginationDto.search.toLowerCase() },
-        email: { startsWith: paginationDto.search.toLowerCase() },
-        telefono: { startsWith: paginationDto.search.toLowerCase() },
+        // isActive: true,
+        nombre: {
+          not: 'root',
+        },
+        OR: [
+          {
+            nombre: {
+              contains: paginationDto.search.toLowerCase(),
+            },
+          },
+          {
+            email: { contains: paginationDto.search.toLowerCase() },
+          },
+          {
+            telefono: { contains: paginationDto.search.toLowerCase() },
+          },
+        ],
       };
     }
     const personal = await this.prismaService.personal.findMany(clause);
@@ -145,9 +176,9 @@ export class PersonalService {
         id,
       },
       data: {
-        email: updatePersonalDto.email ?? personal.email,
         nombre: updatePersonalDto.nombre ?? personal.nombre,
         telefono: updatePersonalDto.telefono ?? personal.telefono,
+        rolId: updatePersonalDto.rolId ?? personal.rolId,
       },
     });
 
@@ -194,6 +225,28 @@ export class PersonalService {
 
     return {
       message: 'Personal eliminado con exito!',
+    };
+  }
+  async activate(id: string) {
+    const personal = await this.prismaService.personal.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!personal) throw new NotFoundException('El personal no fue encontrado');
+
+    await this.prismaService.personal.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: true,
+      },
+    });
+
+    return {
+      message: 'Personal activado con exito!',
     };
   }
 }
