@@ -34,6 +34,8 @@ model Personal {
 
   rol Rol @relation(fields: [rolId], references: [id])
   rolId String 
+
+   token Token?   
 }
 model Usuario {
   id String @id @default(uuid())
@@ -46,14 +48,18 @@ model Usuario {
   qr Boolean @default(false)
   linkqr String? 
 
-  token Token?   
+ 
 }
 
 model Token {
    id String @id @default(uuid())
-   createdAt DateTime @default(now()) 
-   user Usuario @relation(fields: [userId],references: [id])
 
+  token String
+   createdAt DateTime @default(now()) 
+
+
+
+   user Personal @relation(fields: [userId],references: [id])
    userId String @unique
  }
 

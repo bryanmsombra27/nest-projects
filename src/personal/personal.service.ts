@@ -15,7 +15,11 @@ import { FindPersonalResponse } from 'src/common/interfaces/FindOneResponses';
 import { UpdatePersonalResponse } from 'src/common/interfaces/UpdateResponses';
 import { DeletePersonalResponse } from 'src/common/interfaces/DeleteResponses';
 import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
-import { UpdatePersonalInternalPasswordDto } from './dto/passwordDto';
+import {
+  ForgotPasswordDto,
+  UpdatePersonalInternalPasswordDto,
+} from './dto/passwordDto';
+import { passwordEmail, transport } from 'src/common/helpers/qrEmail';
 
 @Injectable()
 export class PersonalService {
@@ -284,5 +288,50 @@ export class PersonalService {
     } else {
       throw new BadRequestException('No fue posible actualizar la contraseña');
     }
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+
+    const personal = await this.prismaService.personal.findUnique({
+      where: {
+        isActive: true,
+        email,
+      },
+    });
+    if (!personal) throw new NotFoundException('Personal no encontrado');
+
+    const token = await this.prismaService.token.findUnique({
+      where: {
+        userId: personal.id,
+      },
+    });
+
+    if (token) {
+      await this.prismaService.token.delete({
+        where: {
+          userId: personal.id,
+        },
+      });
+    }
+
+    const resetToken = await hash('koso', 10);
+    const compareHash = await hash(resetToken, 10);
+
+    await this.prismaService.token.create({
+      data: {
+        userId: personal.id,
+        token: compareHash,
+      },
+    });
+    const link = `${process.env.FRONTEND_HOST}/reset-password?token=${resetToken}&id=${personal.id}`;
+
+    console.log(link, 'LINK DEL RESET EMAIL');
+
+    await transport.sendMail(passwordEmail(email, link));
+
+    return {
+      message: 'Correo enviado exitosamente!',
+    };
   }
 }

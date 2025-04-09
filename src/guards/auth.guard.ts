@@ -7,18 +7,28 @@ import {
 // import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private reflector: Reflector,
+  ) {}
 
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    const token = this.getTokenFromHeader(request);
+    const isPublicAccess = this.reflector.get<boolean>(
+      'public',
+      context.getHandler(),
+    );
 
+    if (isPublicAccess) return true;
+
+    const token = this.getTokenFromHeader(request);
     if (!token) throw new UnauthorizedException('el token es requerido');
 
     const user = this.authService.verifyToken(token);

@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { PersonalService } from './personal.service';
 import { CreatePersonalDto } from './dto/create-personal.dto';
@@ -17,7 +18,10 @@ import { LoggedUser } from 'src/common/decorators/logged-user/logged-user.decora
 import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
 import { ValidRoles } from 'src/common/config/constants';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { UpdatePersonalInternalPasswordDto } from './dto/passwordDto';
+import {
+  ForgotPasswordDto,
+  UpdatePersonalInternalPasswordDto,
+} from './dto/passwordDto';
 
 @Controller('personal')
 @UseGuards(AuthGuard)
@@ -89,5 +93,11 @@ export class PersonalController {
     user: EncodedPayloadToken,
   ) {
     return this.personalService.changePassword(updatePersonalPassword, user);
+  }
+
+  @Post('forgot-password')
+  @SetMetadata('public', true)
+  forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.personalService.forgotPassword(forgotPasswordDto);
   }
 }

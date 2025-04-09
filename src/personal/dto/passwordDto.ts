@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class UpdatePersonalInternalPasswordDto {
   @IsString()
@@ -12,4 +12,10 @@ export class UpdatePersonalInternalPasswordDto {
   @IsString()
   @IsNotEmpty()
   new_password_confirmation: string;
+}
+
+export class ForgotPasswordDto {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
 }
