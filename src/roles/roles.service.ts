@@ -30,18 +30,38 @@ export class RolesService {
     const limit = paginationDto.limit ?? 10;
     const offset = (+page - 1) * limit;
     const clause: Prisma.RolFindManyArgs = {
+      where: {
+        name: {
+          not: 'root',
+        },
+      },
       take: limit,
       skip: offset,
     };
-    const countClause: Prisma.RolCountArgs = {};
+    const countClause: Prisma.RolCountArgs = {
+      where: {
+        name: {
+          not: 'root',
+        },
+      },
+    };
 
     if (paginationDto.search) {
-      clause.where.name = {
-        startsWith: paginationDto.search.toLowerCase().trim(),
+      const whereSearchClause: Prisma.RolWhereInput = {
+        OR: [
+          {
+            name: {
+              contains: paginationDto.search.toLowerCase().trim(),
+            },
+          },
+        ],
+        name: {
+          not: 'root',
+        },
       };
-      countClause.where.name = {
-        startsWith: paginationDto.search.toLowerCase().trim(),
-      };
+
+      clause.where = whereSearchClause;
+      countClause.where = whereSearchClause;
     }
 
     const roles = await this.prismaService.rol.findMany(clause);
@@ -127,5 +147,26 @@ export class RolesService {
     });
 
     return { message: 'Rol eliminado con exito' };
+  }
+  async activate(id: string) {
+    const rol = await this.prismaService.rol.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!rol) throw new NotFoundException('No se encontro el rol');
+
+    await this.prismaService.rol.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: true,
+      },
+    });
+
+    return {
+      message: 'Rol activado con exito!',
+    };
   }
 }

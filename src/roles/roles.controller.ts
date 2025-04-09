@@ -71,4 +71,11 @@ export class RolesController {
   ) {
     return this.rolesService.delete(id);
   }
+  @Patch('activate/:id')
+  activate(
+    @LoggedUser([ValidRoles.ROOT]) user: EncodedPayloadToken,
+    @Param('id') id: string,
+  ) {
+    return this.rolesService.activate(id);
+  }
 }

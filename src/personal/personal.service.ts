@@ -79,14 +79,16 @@ export class PersonalService {
     };
     const countClause: Prisma.PersonalCountArgs = {
       where: {
+        rol: {
+          name: {
+            not: 'root',
+          },
+        },
         // isActive: true,
       },
     };
     if (paginationDto.search) {
-      clause.where = {
-        nombre: {
-          not: 'root',
-        },
+      const whereClause: Prisma.PersonalWhereInput = {
         OR: [
           {
             nombre: {
@@ -100,27 +102,15 @@ export class PersonalService {
             telefono: { contains: paginationDto.search.toLowerCase() },
           },
         ],
-        // isActive: true,
-      };
-      clause.where = {
-        // isActive: true,
-        nombre: {
-          not: 'root',
+        rol: {
+          name: {
+            not: 'root',
+          },
         },
-        OR: [
-          {
-            nombre: {
-              contains: paginationDto.search.toLowerCase(),
-            },
-          },
-          {
-            email: { contains: paginationDto.search.toLowerCase() },
-          },
-          {
-            telefono: { contains: paginationDto.search.toLowerCase() },
-          },
-        ],
       };
+
+      clause.where = whereClause;
+      countClause.where = whereClause;
     }
     const personal = await this.prismaService.personal.findMany(clause);
     const count = await this.prismaService.personal.count(countClause);
