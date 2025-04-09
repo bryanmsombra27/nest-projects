@@ -1,15 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePersonalDto } from './dto/create-personal.dto';
 import { UpdatePersonalDto } from './dto/update-personal.dto';
 import { PrismaService } from '../common/services/prisma/prisma.service';
 import { CreatePersonalResponse } from 'src/common/interfaces/CreateResponses';
-import { hash } from 'bcryptjs';
+import { compare, compareSync, genSalt, hash } from 'bcryptjs';
 import { PaginationDto } from 'src/common/dto/paginationDto';
 import { Personal, Prisma } from '@prisma/client';
 import { GetAllPersonal } from 'src/common/interfaces/GetAllResponses';
 import { FindPersonalResponse } from 'src/common/interfaces/FindOneResponses';
 import { UpdatePersonalResponse } from 'src/common/interfaces/UpdateResponses';
 import { DeletePersonalResponse } from 'src/common/interfaces/DeleteResponses';
+import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
+import { UpdatePersonalInternalPasswordDto } from './dto/passwordDto';
 
 @Injectable()
 export class PersonalService {
@@ -238,5 +244,45 @@ export class PersonalService {
     return {
       message: 'Personal activado con exito!',
     };
+  }
+
+  async changePassword(
+    updatePersonalPassword: UpdatePersonalInternalPasswordDto,
+    user: EncodedPayloadToken,
+  ) {
+    const personal = await this.prismaService.personal.findUnique({
+      where: {
+        isActive: true,
+        id: user.id,
+      },
+    });
+    if (!personal) throw new NotFoundException('Personal no encontrado');
+
+    const { last_password, new_password, new_password_confirmation } =
+      updatePersonalPassword;
+
+    if (compareSync(last_password, personal.password)) {
+      if (new_password === new_password_confirmation) {
+        const newHasPassword = await hash(new_password, 10);
+
+        await this.prismaService.personal.update({
+          where: {
+            isActive: true,
+            id: user.id,
+          },
+          data: {
+            password: newHasPassword,
+          },
+        });
+
+        return {
+          message: 'Contraseña actualizada con exito!',
+        };
+      } else {
+        throw new BadRequestException('Las contraseñas no coinciden');
+      }
+    } else {
+      throw new BadRequestException('No fue posible actualizar la contraseña');
+    }
   }
 }

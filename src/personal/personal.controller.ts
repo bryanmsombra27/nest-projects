@@ -17,6 +17,7 @@ import { LoggedUser } from 'src/common/decorators/logged-user/logged-user.decora
 import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
 import { ValidRoles } from 'src/common/config/constants';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { UpdatePersonalInternalPasswordDto } from './dto/passwordDto';
 
 @Controller('personal')
 @UseGuards(AuthGuard)
@@ -79,5 +80,14 @@ export class PersonalController {
     user: EncodedPayloadToken,
   ) {
     return this.personalService.activate(id);
+  }
+
+  @Post('update-password')
+  updatePassword(
+    @Body() updatePersonalPassword: UpdatePersonalInternalPasswordDto,
+    @LoggedUser([ValidRoles.ROOT, ValidRoles.ADMIN])
+    user: EncodedPayloadToken,
+  ) {
+    return this.personalService.changePassword(updatePersonalPassword, user);
   }
 }
