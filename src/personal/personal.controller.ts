@@ -20,6 +20,8 @@ import { ValidRoles } from 'src/common/config/constants';
 import { AuthGuard } from 'src/guards/auth.guard';
 import {
   ForgotPasswordDto,
+  ResetPasswordDto,
+  ResetPasswordQueryParams,
   UpdatePersonalInternalPasswordDto,
 } from './dto/passwordDto';
 
@@ -99,5 +101,13 @@ export class PersonalController {
   @SetMetadata('public', true)
   forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     return this.personalService.forgotPassword(forgotPasswordDto);
+  }
+  @Post('reset-password')
+  @SetMetadata('public', true)
+  resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+    @Query() params: ResetPasswordQueryParams,
+  ) {
+    return this.personalService.resetPassword(resetPasswordDto, params);
   }
 }

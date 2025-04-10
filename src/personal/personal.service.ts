@@ -17,6 +17,8 @@ import { DeletePersonalResponse } from 'src/common/interfaces/DeleteResponses';
 import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
 import {
   ForgotPasswordDto,
+  ResetPasswordDto,
+  ResetPasswordQueryParams,
   UpdatePersonalInternalPasswordDto,
 } from './dto/passwordDto';
 import { passwordEmail, transport } from 'src/common/helpers/qrEmail';
@@ -333,5 +335,62 @@ export class PersonalService {
     return {
       message: 'Correo enviado exitosamente!',
     };
+  }
+
+  async resetPassword(
+    resetPasswordDto: ResetPasswordDto,
+    params: ResetPasswordQueryParams,
+  ) {
+    const { id, token } = params;
+    const { new_password, new_password_confirmation } = resetPasswordDto;
+
+    const personal = await this.prismaService.personal.findUnique({
+      where: {
+        isActive: true,
+        id,
+      },
+    });
+    if (!personal) throw new NotFoundException('Personal no encontrado');
+
+    const passwordTokenReset = await this.prismaService.token.findUnique({
+      where: {
+        userId: personal.id,
+      },
+    });
+
+    if (!passwordTokenReset) throw new NotFoundException('Token invalido');
+
+    const isValid = await compare(token, passwordTokenReset.token);
+
+    if (!isValid) {
+      throw new BadRequestException('Token no coincide');
+    } else {
+      if (new_password === new_password_confirmation) {
+        const hashNewPassword = await hash(new_password, 10);
+        await this.prismaService.personal.update({
+          where: {
+            id: personal.id,
+            isActive: true,
+          },
+          data: {
+            password: hashNewPassword,
+          },
+        });
+
+        await this.prismaService.token.delete({
+          where: {
+            id: passwordTokenReset.id,
+          },
+        });
+
+        return {
+          message: 'Contraseña actualizada con exito!',
+        };
+      } else {
+        throw new BadRequestException(
+          'No fue posible actualizar la contraseña',
+        );
+      }
+    }
   }
 }
