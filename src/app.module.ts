@@ -6,9 +6,17 @@ import { PrismaService } from './common/services/prisma/prisma.service';
 import { RolesModule } from './roles/roles.module';
 import { PersonalModule } from './personal/personal.module';
 import { UserModule } from './user/user.module';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, RolesModule, PersonalModule, UserModule],
+  imports: [
+    ConfigModule.forRoot(),
+    AuthModule,
+    RolesModule,
+    PersonalModule,
+    UserModule,
+    SeederModule,
+  ],
   controllers: [],
   providers: [PrismaService],
 })
