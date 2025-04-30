@@ -7,7 +7,7 @@ import * as cron from 'node-cron';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // reporteXML('prices', 'places');
+  reporteXML('prices', 'places');
 
   cron.schedule('0 */4 * * *', () => {
     reporteXML('prices', 'places');
