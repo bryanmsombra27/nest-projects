@@ -6,11 +6,254 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <h1>GASAPI</h1>
+
+    <style>
+        .flex {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        main {
+            position: relative;
+            height: 80vh;
+        }
+
+
+        span {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            transition: all ease-in-out .3;
+        }
+
+        span:hover,
+        .active {
+            text-decoration: underline;
+            color: #2a6b84;
+        }
+
+        .grid {
+            display: grid;
+            margin: 0 auto;
+            max-width: 1200px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        /* loader styles */
+        /* HTML: <div class="loader"></div> */
+        .loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /* transform: translate(50%, -50%); */
+
+
+            width: 40px;
+            height: 20px;
+            --c: no-repeat radial-gradient(farthest-side, #000 93%, #0000);
+            background:
+                var(--c) 0 0,
+                var(--c) 50% 0,
+                var(--c) 100% 0;
+            background-size: 8px 8px;
+            position: relative;
+            animation: l4-0 1s linear infinite alternate;
+        }
+
+        .loader:before {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 12px;
+            background: #000;
+            left: 0;
+            top: 0;
+            animation:
+                l4-1 1s linear infinite alternate,
+                l4-2 0.5s cubic-bezier(0, 200, .8, 200) infinite;
+        }
+
+        @keyframes l4-0 {
+            0% {
+                background-position: 0 100%, 50% 0, 100% 0
+            }
+
+            8%,
+            42% {
+                background-position: 0 0, 50% 0, 100% 0
+            }
+
+            50% {
+                background-position: 0 0, 50% 100%, 100% 0
+            }
+
+            58%,
+            92% {
+                background-position: 0 0, 50% 0, 100% 0
+            }
+
+            100% {
+                background-position: 0 0, 50% 0, 100% 100%
+            }
+        }
+
+        @keyframes l4-1 {
+            100% {
+                left: calc(100% - 8px)
+            }
+        }
+
+        @keyframes l4-2 {
+            100% {
+                top: -0.1px
+            }
+        }
+    </style>
 
 </head>
 
+<h1>GASPRICES</h1>
+
+<section class="flex">
+    <span class="zona active" class="zona" data-zona="magallanes">Magallanes</span>
+    <span class="zona" data-zona="coyuca">coyuca</span>
+    <span class="zona" data-zona="diamante">diamante</span>
+    <span class="zona" data-zona="llano">llano</span>
+    <span class="zona" data-zona="chilpo">chilpo</span>
+    <span class="zona" data-zona="rena">rena</span>
+    <span class="zona" data-zona="muller">muller</span>
+    <span class="zona" data-zona="servifer">servifer</span>
+    <span class="zona" data-zona="cruz-grande">cruz-grande</span>
+    <span class="zona" data-zona="ejido-modelo">ejido-modelo</span>
+    <span class="zona" data-zona="costera-diana">costera-diana</span>
+
+
+</section>
+
+
+<main>
+    <div class="loader"></div>
+
+    <div class="grid">
+        <span>id</span>
+        <span>nombre</span>
+        <span>regular</span>
+        <span>premium</span>
+        <span>diesel</span>
+
+
+
+
+    </div>
+
+
+</main>
+
+
+
+
+
+
+
 <body>
+
+
+    <script>
+        const url = '/zones';
+
+        const fetchByZones = async (zone) => {
+            const loader = document.querySelector(".loader")
+
+            loader.style.display = "block";
+
+            const response = await fetch(`${url}/${zone}`);
+            const data = await response.json();
+            console.log(data);
+            const grid = document.querySelector(".grid");
+
+            grid.innerHTML = `
+            
+            <span>id</span>
+        <span>nombre</span>
+        <span>regular</span>
+        <span>premium</span>
+        <span>diesel</span>
+
+            `;
+
+            data.precios.forEach((zone) => {
+                const p = document.createElement("p");
+
+                grid.innerHTML += `
+              
+
+
+                    <p>${zone.cre_id}  </p>
+                    <p>${zone.name}  </p>
+                    <p>${zone.type.regular ? zone.type.regular : "N/A"}  </p>
+                    <p>${zone.type.premium ? zone.type.premium : "N/A"}  </p>
+                    <p>${zone.type.diesel ? zone.type.diesel : "N/A"}  </p>
+
+    
+          `
+            })
+            loader.style.display = "none";
+
+
+        }
+
+
+
+        window.addEventListener("DOMContentLoaded", () => {
+            fetchByZones("magallanes");
+
+            const zones = document.querySelectorAll(".zona");
+
+
+
+            zones.forEach((zone) => {
+
+                zone.addEventListener("click", () => {
+                    zones.forEach((zona) => {
+                        zona.classList.remove("active")
+                    })
+
+
+
+
+                    if (zone.classList.contains("active")) {
+                        zone.classList.remove("active")
+                    } else {
+                        zone.classList.add("active")
+                    }
+
+
+
+                    fetchByZones(zone.dataset.zona);
+
+
+
+
+
+
+                })
+            })
+        })
+
+
+
+
+
+
+
+    </script>
 
 </body>
 
