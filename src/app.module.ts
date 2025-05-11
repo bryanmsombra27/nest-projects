@@ -8,6 +8,7 @@ import { PersonalModule } from './personal/personal.module';
 import { UserModule } from './user/user.module';
 import { SeederModule } from './seeder/seeder.module';
 import { ModulosModule } from './modulos/modulos.module';
+import { SubmodulosModule } from './submodulos/submodulos.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ModulosModule } from './modulos/modulos.module';
     UserModule,
     SeederModule,
     ModulosModule,
+    SubmodulosModule,
   ],
   controllers: [],
   providers: [PrismaService],
