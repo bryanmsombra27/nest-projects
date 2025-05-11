@@ -1,4 +1,4 @@
-import { Personal, Rol, Usuario } from '@prisma/client';
+import { Modulos, Personal, Rol, Usuario } from '@prisma/client';
 
 interface CommonResponse {
   message: string;
@@ -13,4 +13,7 @@ export interface DeletePersonalResponse extends CommonResponse {
 
 export interface DeleteUsuarioResponse extends CommonResponse {
   usuario: Usuario;
+}
+export interface DeleteModuloResponse extends CommonResponse {
+  modulo: Modulos;
 }

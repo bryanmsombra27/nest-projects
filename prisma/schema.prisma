@@ -22,6 +22,10 @@ model Rol {
 
 
     Personal Personal[]
+
+    Permisos_modulos Permisos_modulos[]
+
+    Permisos_submodulos Permisos_submodulos[]
 }
 
 model Personal {
@@ -63,3 +67,62 @@ model Token {
    userId String @unique
  }
 
+
+model Modulos {
+   id String @id @default(uuid())
+  name String
+  route String?
+  icon String
+
+
+
+
+  Submodulos Submodulos[] 
+
+  Permisos_modulos Permisos_modulos[]
+}
+
+model Submodulos {
+  id String @id @default(uuid())
+  name String
+  route String
+  icon String
+
+
+  modulos Modulos @relation(fields: [module_id],references: [id], onDelete: Cascade)
+  module_id String
+
+
+  Permisos_submodulos Permisos_submodulos[]
+}
+
+
+model Permisos_modulos {
+    id String @id @default(uuid())
+    read Boolean
+    edit Boolean
+    write Boolean
+    delete Boolean
+
+    RolPermissions Rol @relation(fields:[role_id],references: [id] )
+    role_id String
+
+    ModulosPermissions Modulos @relation(fields:[module_id],references: [id])
+    module_id String
+
+}
+
+model Permisos_submodulos{
+    id String @id @default(uuid())
+    read Boolean
+    edit Boolean
+    write Boolean
+    delete Boolean
+
+    RolPermissions Rol @relation(fields:[role_id],references: [id] )
+    role_id String
+
+    SubModulosPermissions Submodulos @relation(fields:[module_id],references: [id])
+    module_id String
+
+}

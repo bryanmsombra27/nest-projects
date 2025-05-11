@@ -7,6 +7,7 @@ import { RolesModule } from './roles/roles.module';
 import { PersonalModule } from './personal/personal.module';
 import { UserModule } from './user/user.module';
 import { SeederModule } from './seeder/seeder.module';
+import { ModulosModule } from './modulos/modulos.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { SeederModule } from './seeder/seeder.module';
     PersonalModule,
     UserModule,
     SeederModule,
+    ModulosModule,
   ],
   controllers: [],
   providers: [PrismaService],
