@@ -50,6 +50,12 @@ export class ModulosService {
     const clause: Prisma.ModulosFindManyArgs = {
       take: limit,
       skip: offset,
+      include: {
+        Submodulos: true,
+      },
+      orderBy: {
+        name: 'desc',
+      },
     };
     const countClause: Prisma.ModulosCountArgs = {};
 

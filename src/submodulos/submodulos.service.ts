@@ -88,7 +88,7 @@ export class SubmodulosService {
     updateSubmoduloDto: UpdateSubmoduloDto,
   ): Promise<UpdateSubModuloResponse> {
     const submodulo = await this.findOne(id);
-    const { icon, module_id, name, route } = updateSubmoduloDto;
+    const { icon, name, route } = updateSubmoduloDto;
 
     const submoduloUpdated = await this.prismaService.submodulos.update({
       where: {
@@ -97,7 +97,6 @@ export class SubmodulosService {
       data: {
         icon: icon ?? submodulo.icon,
         name: name ?? submodulo.name,
-        module_id: module_id ?? submodulo.module_id,
         route: route ?? submodulo.route,
       },
     });
