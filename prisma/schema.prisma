@@ -25,7 +25,6 @@ model Rol {
 
     Permisos_modulos Permisos_modulos[]
 
-    Permisos_submodulos Permisos_submodulos[]
 }
 
 model Personal {
@@ -110,6 +109,8 @@ model Permisos_modulos {
     ModulosPermissions Modulos @relation(fields:[module_id],references: [id])
     module_id String
 
+
+    Permisos_submodulos Permisos_submodulos[]
 }
 
 model Permisos_submodulos{
@@ -119,10 +120,12 @@ model Permisos_submodulos{
     write Boolean
     delete Boolean
 
-    RolPermissions Rol @relation(fields:[role_id],references: [id] )
-    role_id String
+    SubModulosPermissions Submodulos @relation(fields:[submodule_id],references: [id])
+    submodule_id String
 
-    SubModulosPermissions Submodulos @relation(fields:[module_id],references: [id])
-    module_id String
+    PermisosModulos Permisos_modulos @relation(fields: [module_permission_id], references: [id])
+    module_permission_id String 
+
+
 
 }
