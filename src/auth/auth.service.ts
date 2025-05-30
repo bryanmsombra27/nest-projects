@@ -47,9 +47,21 @@ export class AuthService {
 
         include: {
           rol: {
-            select: {
-              id: true,
-              name: true,
+            include: {
+              Permisos_modulos: {
+                include: {
+                  ModulosPermissions: true,
+                  Permisos_submodulos: {
+                    include: {
+                      SubModulosPermissions: {
+                        include: {
+                          Permisos_submodulos: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -68,6 +80,11 @@ export class AuthService {
       rol_name: personal.rol.name,
     };
     // console.log(personal, 'LOGGED USER');
+    // console.log(personal.rol, 'LOGGED USER  ROL');
+    console.log(
+      personal.rol.Permisos_modulos,
+      'LOGGED USER  ROL PERMISOSS  MODULOS',
+    );
 
     // console.log(personalToken, 'PAYLOAD TOKEN');
 
