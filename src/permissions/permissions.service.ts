@@ -32,16 +32,42 @@ export class PermissionsService {
       console.log(module, 'MODULO ITERADO');
 
       if (!module?.submodules) {
-        await this.prismaService.permisos_modulos.create({
-          data: {
-            role_id: roleId,
+        const permission = await this.prismaService.permisos_modulos.findFirst({
+          where: {
             module_id: module.id,
-            edit: module.edit ?? false,
-            write: module.write ?? false,
-            delete: module.delete ?? false,
-            read: true,
+            role_id: roleId,
           },
         });
+
+        const modulo = await this.prismaService.permisos_modulos.upsert({
+          create: {
+            edit: module.edit,
+            write: module.write,
+            delete: module.delete,
+            read: module.read,
+            role_id: roleId,
+            module_id: module.id,
+          },
+          update: {
+            edit: module.edit,
+            write: module.write,
+            read: module.read,
+            delete: module.delete,
+          },
+          where: {
+            id: permission?.id ?? '1',
+            module_id: module.id,
+            role_id: roleId,
+          },
+        });
+
+        if (!modulo.delete && !modulo.delete && !modulo.edit && !modulo.write) {
+          await this.prismaService.permisos_modulos.delete({
+            where: {
+              id: modulo.id,
+            },
+          });
+        }
       } else {
         const submodules = [];
         for (const submodule of module.submodules) {
@@ -50,25 +76,26 @@ export class PermissionsService {
             delete: submodule.delete ?? false,
             edit: submodule.edit ?? false,
             write: submodule.write ?? false,
-            read: true,
+            read: submodule.read ?? true,
           });
         }
 
-        await this.prismaService.permisos_modulos.create({
-          data: {
-            role_id: roleId,
-            module_id: module.id,
-            edit: module.edit ?? false,
-            write: module.write ?? false,
-            delete: module.delete ?? false,
-            read: true,
-            Permisos_submodulos: {
-              createMany: {
-                data: submodules,
-              },
-            },
-          },
-        });
+        // CREAR PERMISOS PARA EL MODULO Y SUBMODULOS ASIGNADOS
+        // await this.prismaService.permisos_modulos.create({
+        //   data: {
+        //     role_id: roleId,
+        //     module_id: module.id,
+        //     edit: module.edit ?? false,
+        //     write: module.write ?? false,
+        //     delete: module.delete ?? false,
+        //     read: true,
+        //     Permisos_submodulos: {
+        //       createMany: {
+        //         data: submodules,
+        //       },
+        //     },
+        //   },
+        // });
       }
     }
 

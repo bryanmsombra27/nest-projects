@@ -19,6 +19,9 @@ export class CreatePermissionDto {
   @IsBoolean()
   delete: boolean;
 
+  @IsBoolean()
+  read: boolean;
+
   // @IsArray({ each: true })
   @IsOptional()
   @ValidateNested({ each: true })
@@ -37,6 +40,9 @@ class CreatePermissionSubmoduleDto {
 
   @IsBoolean()
   delete: boolean;
+
+  @IsBoolean()
+  read: boolean;
 }
 
 // id: string;
