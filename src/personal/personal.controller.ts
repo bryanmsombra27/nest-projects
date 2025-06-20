@@ -110,4 +110,9 @@ export class PersonalController {
   ) {
     return this.personalService.resetPassword(resetPasswordDto, params);
   }
+
+  @Get('qrcode/:id')
+  getQRForLogin(@Param('id') id: string) {
+    return this.personalService.sendQRForLogin(id);
+  }
 }

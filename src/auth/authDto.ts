@@ -10,3 +10,9 @@ export class LoginDto {
   @IsNotEmpty()
   password: string;
 }
+
+export class LoginQrDto {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+}

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { LoginDto } from './authDto';
+import { LoginDto, LoginQrDto } from './authDto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,5 +23,9 @@ export class AuthController {
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+  @Post('login/qr')
+  loginWithQrCode(@Body() loginDto: LoginQrDto) {
+    return this.authService.loginWithQR(loginDto);
   }
 }

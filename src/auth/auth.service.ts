@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from './authDto';
+import { LoginDto, LoginQrDto } from './authDto';
 import { PrismaService } from '../common/services/prisma/prisma.service';
 import { compare } from 'bcryptjs';
 import { EncodedPayloadToken } from 'src/common/interfaces/TokenUser';
@@ -87,6 +87,56 @@ export class AuthService {
     );
 
     // console.log(personalToken, 'PAYLOAD TOKEN');
+
+    const token = this.generateToken(personalToken);
+
+    return {
+      message: 'Login exitoso!',
+      token,
+      personal,
+    };
+  }
+  async loginWithQR(loginDto: LoginQrDto) {
+    const isValidPersonal = await this.prismaService.personal.findFirst({
+      where: {
+        id: loginDto.id,
+        isActive: true,
+      },
+
+      include: {
+        rol: {
+          include: {
+            Permisos_modulos: {
+              include: {
+                ModulosPermissions: true,
+                Permisos_submodulos: {
+                  include: {
+                    SubModulosPermissions: {
+                      include: {
+                        Permisos_submodulos: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!isValidPersonal)
+      throw new NotFoundException('El personal no es valido');
+
+    const { password, ...personal } = isValidPersonal;
+
+    const personalToken: EncodedPayloadToken = {
+      id: personal.id,
+      nombre: personal.nombre,
+      email: personal.email,
+      rol_id: personal.rolId,
+      rol_name: personal.rol.name,
+    };
 
     const token = this.generateToken(personalToken);
 

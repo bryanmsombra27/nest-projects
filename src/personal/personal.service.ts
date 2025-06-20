@@ -21,7 +21,8 @@ import {
   ResetPasswordQueryParams,
   UpdatePersonalInternalPasswordDto,
 } from './dto/passwordDto';
-import { passwordEmail, transport } from 'src/common/helpers/qrEmail';
+import { passwordEmail, qrEmail, transport } from 'src/common/helpers/qrEmail';
+import { toDataURL } from 'qrcode';
 
 @Injectable()
 export class PersonalService {
@@ -391,6 +392,29 @@ export class PersonalService {
           'No fue posible actualizar la contraseña',
         );
       }
+    }
+  }
+
+  async sendQRForLogin(id: string) {
+    const user = await this.findOne(id);
+
+    const url = await this.generateQR(id);
+
+    await transport.sendMail(qrEmail(user.email, user.nombre, url));
+    return {
+      message: 'El codigo QR fue generado con exito, se ha enviado al correo!',
+    };
+  }
+
+  private async generateQR(text: string) {
+    try {
+      console.log(await toDataURL(text), 'QR CODE GENERATE');
+
+      const url = await toDataURL(text);
+      return url;
+    } catch (error) {
+      console.log(error, 'QR ERROR');
+      throw new BadRequestException('EL codigo QR no pudo ser generado');
     }
   }
 }
