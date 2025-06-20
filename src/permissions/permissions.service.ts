@@ -8,10 +8,14 @@ import {
   CreateSubmodulePermissionsDto,
   UpdateSubmodulePermissionDto,
 } from './dto/create_submodule-permissions.dto';
+import { QrudGateway } from 'src/socket-server/qrud.gateway';
 
 @Injectable()
 export class PermissionsService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private socketService: QrudGateway,
+  ) {}
 
   async create(roleId: string, createPermissionDto: CreatePermissionDto[]) {
     const rol = await this.prismaService.rol.findUnique({
@@ -27,6 +31,8 @@ export class PermissionsService {
       );
     }
     console.log(createPermissionDto, 'PERMISSION DTO');
+
+    const updatedModules = [];
 
     for (const module of createPermissionDto) {
       console.log(module, 'MODULO ITERADO');
@@ -60,6 +66,8 @@ export class PermissionsService {
             role_id: roleId,
           },
         });
+
+        updatedModules.push(modulo.module_id);
 
         if (!modulo.delete && !modulo.delete && !modulo.edit && !modulo.write) {
           await this.prismaService.permisos_modulos.delete({
@@ -98,6 +106,37 @@ export class PermissionsService {
         // });
       }
     }
+    // const modulesAndPermissions = await this.prismaService.modulos.findMany({
+    //   where: {
+    //     id: {
+    //       in: updatedModules,
+    //     },
+    //   },
+    //   include: {
+    //     Permisos_modulos: {
+    //       select:{
+
+    //       }
+    //     },
+    //   },
+    // });
+    const modulesAndPermissions = await this.prismaService.rol.findFirst({
+      where: {
+        id: roleId,
+        isActive: true,
+      },
+      include: {
+        Permisos_modulos: {
+          include: {
+            ModulosPermissions: true,
+          },
+        },
+      },
+    });
+
+    console.log(modulesAndPermissions, 'MODULOS Y PERMISOS ASIGNADOS');
+
+    this.socketService.updateRolPermissions(modulesAndPermissions);
 
     return {
       message: 'Los permisos para el modulo se asignaron correctamente!',
