@@ -136,7 +136,10 @@ export class PermissionsService {
 
     console.log(modulesAndPermissions, 'MODULOS Y PERMISOS ASIGNADOS');
 
-    this.socketService.updateRolPermissions(modulesAndPermissions);
+    this.socketService.updateRolPermissions({
+      roleName: rol.name,
+      permissions: modulesAndPermissions.Permisos_modulos,
+    });
 
     return {
       message: 'Los permisos para el modulo se asignaron correctamente!',
