@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,10 +25,11 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @SetMetadata('public', true)
   create(
     @Body() createUserDto: CreateUserDto,
-    @LoggedUser([ValidRoles.ROOT, ValidRoles.ADMIN, ValidRoles.AUX])
-    user: EncodedPayloadToken,
+    // @LoggedUser([ValidRoles.ROOT, ValidRoles.ADMIN, ValidRoles.AUX])
+    // user: EncodedPayloadToken,
   ) {
     return this.userService.create(createUserDto);
   }

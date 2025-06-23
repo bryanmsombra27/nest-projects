@@ -10,6 +10,7 @@ import { SeederModule } from './seeder/seeder.module';
 import { ModulosModule } from './modulos/modulos.module';
 import { SubmodulosModule } from './submodulos/submodulos.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { FirebaseService } from './common/services/firebase/firebase.service';
 
 @Module({
   imports: [

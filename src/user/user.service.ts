@@ -14,10 +14,14 @@ import { UpdateUsuarioResponse } from 'src/common/interfaces/UpdateResponses';
 import { DeleteUsuarioResponse } from 'src/common/interfaces/DeleteResponses';
 import { toDataURL } from 'qrcode';
 import { opt, qrEmail, transport } from 'src/common/helpers/qrEmail';
+import { FirebaseService } from 'src/common/services/firebase/firebase.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly firebaseService: FirebaseService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<CreateUsuarioResponse> {
     try {
@@ -260,29 +264,19 @@ export class UserService {
       });
       await transport.sendMail(qrEmail(usuario.email, usuario.nombre, url));
 
+      await this.firebaseService.sendNotificationToDevice(
+        'eDc04R6VQiyqpMukel1W-V:APA91bE0OdyYamFxXXIGfUZwMUt9dw8fjm19lEW9s7mQNYk7J_s2LrT4f033NwMO4UT9kC794UyEKX2ZCj1YFXvCDbDtpWMg3sTAV4JTtL9zH6J5vYsXNss',
+        `¡Codigo QR generado con exito  😊!`,
+        'Tu codigo QR ha sido generado con exito, ahora puedes consultarlo desde la app 😎!',
+        url,
+      );
+
+      console.log('NOTIFICACION PUSH ENVIADA');
+
       return {
         message:
           'El codigo QR fue generado con exito, se ha enviado al correo!',
       };
-
-      // QRCode.toDataURL(qrUser, function (err, url) {
-      //   transport
-      //     .sendMail(qrEmail(usuario.email, usuario.nombre, url))
-      //     .then(async (_info) => {
-      //       usuario.linkqr = url;
-      //       usuario.qr = true;
-
-      //       //Ocupar para debug
-      //       // console.log(info.response)
-      //       return {
-      //         status: 'success',
-      //         msg: 'Codigo QR enviado al correo correctamente',
-      //       };
-      //     })
-      //     .catch((err) => {
-      //       console.log(err);
-      //     });
-      // });
     } else {
       throw new BadRequestException(
         'El codigo QR ya fue solicitado y enviado al usuario',
