@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ZonesModule } from './zones/zones.module';
+import { PrismaService } from './services/prisma/prisma.service';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { ZonesModule } from './zones/zones.module';
     ZonesModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [PrismaService],
 })
 export class AppModule {}

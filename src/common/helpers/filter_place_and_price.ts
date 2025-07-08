@@ -63,7 +63,7 @@ const unionDeArregloLugarYPrecio = (lugar, precio) => {
     }
   }
 
-  console.log(mergedArrays, 'MERGED ARRAYS');
+  // console.log(mergedArrays, 'MERGED ARRAYS');
 
   return mergedArrays;
 };

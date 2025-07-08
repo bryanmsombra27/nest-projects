@@ -10,6 +10,7 @@ import {
 import { ZonesService } from './zones.service';
 import { CreateZoneDto } from './dto/create-zone.dto';
 import { UpdateZoneDto } from './dto/update-zone.dto';
+import { PrismaService } from 'src/services/prisma/prisma.service';
 
 @Controller('zones')
 export class ZonesController {

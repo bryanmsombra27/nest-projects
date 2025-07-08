@@ -1,0 +1,14 @@
+version: '3'
+name: GASPRICES
+services:
+  db:
+    container_name: gasapi
+    image: postgres:16.6
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: alwaysMyG
+    volumes:
+      - ./db-data:/var/lib/postgresql/data

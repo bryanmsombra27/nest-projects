@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Place {
+  id       String   @id @default(uuid())
+  name     String
+  place_id String   @unique
+  cre_id   String
+  location String[]
+  prices   Price[]
+}
+
+model Price {
+  id       String  @id @default(uuid())
+  regular  Float?
+  premium  Float?
+  diesel   Float?
+  
+  place    Place   @relation(fields: [place_id], references: [place_id])
+  place_id String
+}
+
