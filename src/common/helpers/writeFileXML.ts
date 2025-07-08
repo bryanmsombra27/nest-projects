@@ -83,13 +83,16 @@ const saveInDB = async () => {
       for (const lugar of placeData.places.place) {
         lugaresDB.push({
           cre_id: lugar.cre_id,
-          location: [String(lugar.location.x), String(lugar.location.y)],
+          // location: [String(lugar.location.x), String(lugar.location.y)],
+          latitude: lugar?.location?.y ?? null,
+          longitude: lugar?.location?.x ?? null,
           name: lugar.name,
           place_id: String(lugar['@_place_id']),
         });
       }
       await prismaClient.place.createMany({
         data: lugaresDB,
+        // data: ,
       });
 
       console.log('LUGARES CARGADOS EN DB');
@@ -107,7 +110,7 @@ const saveInDB = async () => {
     const groupByPlaceIdPricing = unionDeArregloLugarYPrecio(lugares, prices);
 
     const pricesFromDB = await prismaClient.price.findMany();
-
+    console.log('INICIO DE LA CARGA DE LOS PRECIOS');
     for (const item of groupByPlaceIdPricing) {
       const priceFound = pricesFromDB.find(
         (price) => price.place_id == String(item['@_place_id']),
@@ -131,7 +134,7 @@ const saveInDB = async () => {
         },
       });
     }
-
+    console.log('FIN DE LA CARGA DE LOS PRECIOS');
     await prismaClient.$disconnect();
     console.log('DATOS CARGADOS EN DB Y DESCONNECION EXITOSA ');
     console.timeEnd('TIEMPO_TOTAL');

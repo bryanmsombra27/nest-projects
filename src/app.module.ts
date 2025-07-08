@@ -6,6 +6,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ZonesModule } from './zones/zones.module';
 import { PrismaService } from './services/prisma/prisma.service';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PrismaService } from './services/prisma/prisma.service';
     }),
     AuthModule,
     ZonesModule,
+    LocationModule,
   ],
   controllers: [],
   providers: [PrismaService],

@@ -13,7 +13,8 @@ model Place {
   name     String
   place_id String   @unique
   cre_id   String
-  location String[]
+  latitude Float?
+  longitude Float?
   prices   Price[]
 }
 
@@ -22,7 +23,7 @@ model Price {
   regular  Float?
   premium  Float?
   diesel   Float?
-  
+
   place    Place   @relation(fields: [place_id], references: [place_id])
   place_id String
 }

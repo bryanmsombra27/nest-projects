@@ -9,6 +9,7 @@ async function bootstrap() {
 
   // reporteXML('prices', 'places');
   // saveInDB();
+  app.enableCors();
 
   cron.schedule('0 */4 * * *', () => {
     reporteXML('prices', 'places');
