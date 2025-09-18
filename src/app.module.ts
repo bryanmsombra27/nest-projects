@@ -7,6 +7,7 @@ import { join } from 'path';
 import { ZonesModule } from './zones/zones.module';
 import { PrismaService } from './services/prisma/prisma.service';
 import { LocationModule } from './location/location.module';
+import { SuapabaseService } from './services/suapabase/suapabase.service';
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { LocationModule } from './location/location.module';
     LocationModule,
   ],
   controllers: [],
-  providers: [PrismaService],
+  providers: [PrismaService, SuapabaseService],
 })
 export class AppModule {}

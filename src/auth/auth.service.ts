@@ -1,9 +1,19 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from 'src/common/dtos/loginDto';
+import { SuapabaseService } from 'src/services/suapabase/suapabase.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly supabase: SuapabaseService,
+  ) {}
+
   generateToken(payload: any) {
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
@@ -20,5 +30,23 @@ export class AuthService {
     if (!decodeToken) throw new UnauthorizedException('Token invalido');
 
     return decodeToken;
+  }
+
+  async createSupabaseUser(user: LoginDto) {
+    const supabase = this.supabase.getClient();
+    const { data, error } = await supabase.auth.signUp({
+      email: user.email,
+      password: user.password,
+    });
+
+    if (error) {
+      console.log('ERROR DE REGISTRO SUPABASE: ', error);
+      throw new BadRequestException('No fue posible realizar el registro');
+    }
+
+    return {
+      message: 'Usuario registrado con exito, por favor verifica tu cuenta',
+      user: data.user,
+    };
   }
 }

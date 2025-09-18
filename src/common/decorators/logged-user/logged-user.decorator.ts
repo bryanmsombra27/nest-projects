@@ -15,3 +15,12 @@ export const LoggedUser = createParamDecorator(
     return user;
   },
 );
+
+export const supabaseUser = createParamDecorator((_, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest();
+  const user = request.user as any;
+  if (!user) {
+    throw new UnauthorizedException('accesso denegado');
+  }
+  return user;
+});
