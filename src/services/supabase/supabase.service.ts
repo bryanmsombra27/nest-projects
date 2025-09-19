@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
-export class SuapabaseService implements OnModuleInit {
+export class SupabaseService implements OnModuleInit {
   private supabaseClient: SupabaseClient;
 
   onModuleInit() {

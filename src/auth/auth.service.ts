@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from 'src/common/dtos/loginDto';
-import { SuapabaseService } from 'src/services/suapabase/suapabase.service';
+import { SupabaseService } from 'src/services/supabase/supabase.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly supabase: SuapabaseService,
+    private readonly supabase: SupabaseService,
   ) {}
 
   generateToken(payload: any) {

@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { createClient } from '@supabase/supabase-js';
-import { SuapabaseService } from 'src/services/suapabase/suapabase.service';
+import { SupabaseService } from 'src/services/supabase/supabase.service';
 
 @Injectable()
 export class SupabaseGuard implements CanActivate {
-  constructor(private readonly supabase: SuapabaseService) {}
+  constructor(private readonly supabase: SupabaseService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

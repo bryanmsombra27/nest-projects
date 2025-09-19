@@ -3,11 +3,11 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { SuapabaseService } from 'src/services/suapabase/suapabase.service';
+import { SupabaseService } from 'src/services/supabase/supabase.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, SuapabaseService],
+  providers: [AuthService, SupabaseService],
   imports: [ConfigModule.forRoot(), JwtModule],
   exports: [AuthService],
 })
