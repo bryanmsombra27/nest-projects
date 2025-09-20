@@ -35,4 +35,8 @@ export class AuthController {
   createUSer(@Body() user: LoginDto) {
     return this.authService.createSupabaseUser(user);
   }
+  @Post('login')
+  login(@Body() user: LoginDto) {
+    return this.authService.login(user);
+  }
 }

@@ -16,6 +16,10 @@ model Place {
   latitude Float?
   longitude Float?
   prices   Price[]
+
+  
+
+  CommentRating CommentRating[]
 }
 
 model Price {
@@ -28,3 +32,16 @@ model Price {
   place_id String
 }
 
+
+model CommentRating{
+  id       String  @id @default(uuid())
+  userId        String
+  gasStationId  String
+  comment       String?
+  rating        Int
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  place Place @relation(fields: [gasStationId],references: [place_id])
+  @@unique([userId, gasStationId]) // un usuario solo puede comentar 1 vez por gasolinera
+}

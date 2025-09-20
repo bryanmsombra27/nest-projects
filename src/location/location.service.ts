@@ -31,7 +31,7 @@ export class LocationService {
     const userLat = coords.location[0]; // > 55.
     const userLng = coords.location[1]; // -99.
 
-    console.log(userLat, userLng, 'UBICACION INICIAL');
+    // console.log(user.idLat, userLng, 'UBICACION INICIAL');
 
     const places = await this.prismaService.$queryRawUnsafe(`
   SELECT 

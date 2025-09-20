@@ -49,4 +49,21 @@ export class AuthService {
       user: data.user,
     };
   }
+
+  async login(user: LoginDto) {
+    const supabase = this.supabase.getClient();
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: user.password,
+    });
+
+    if (error) {
+      throw new BadRequestException('Correo o contraseña invalidos');
+    }
+
+    return {
+      message: 'Login exitoso!',
+      token: data.session.access_token,
+    };
+  }
 }

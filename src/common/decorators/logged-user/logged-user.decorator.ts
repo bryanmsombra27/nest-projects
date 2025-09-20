@@ -19,6 +19,8 @@ export const LoggedUser = createParamDecorator(
 export const supabaseUser = createParamDecorator((_, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest();
   const user = request.user as any;
+  console.log(user.id, 'SUPABASE USER');
+
   if (!user) {
     throw new UnauthorizedException('accesso denegado');
   }

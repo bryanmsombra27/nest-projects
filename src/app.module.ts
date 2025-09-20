@@ -8,6 +8,7 @@ import { ZonesModule } from './zones/zones.module';
 import { PrismaService } from './services/prisma/prisma.service';
 import { LocationModule } from './location/location.module';
 import { SupabaseService } from './services/supabase/supabase.service';
+import { RatingsModule } from './ratings/ratings.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SupabaseService } from './services/supabase/supabase.service';
     AuthModule,
     ZonesModule,
     LocationModule,
+    RatingsModule,
   ],
   controllers: [],
   providers: [PrismaService, SupabaseService],
