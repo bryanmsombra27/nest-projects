@@ -2,9 +2,9 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as https from 'https';
 import { Place, PrismaClient } from '../../../generated/prisma';
-import { XMLParser } from 'fast-xml-parser';
 import * as _ from 'lodash';
 import { unionDeArregloLugarYPrecio } from './filter_place_and_price';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
 const options = {
   ignoreAttributes: false,
   attributeNamePrefix: '@_',
@@ -42,10 +42,24 @@ const reporteXML = (resource, resource2) => {
         response.pipe(file2);
       },
     );
+    // Esperamos a que ambos streams finalicen
+    let finishedCount = 0;
+    const onFinished = () => {
+      finishedCount++;
+      if (finishedCount === 2) {
+        console.log('ARCHIVOS GENERADOS CON ÉXITO');
+        saveInDB(); // Ahora sí el archivo está completo
+      }
+    };
+    file.on('finish', onFinished);
+    file2.on('finish', onFinished);
 
-    console.log('ARCHIVOS GENERADOS CON EXITO');
-
-    saveInDB();
+    file.on('error', (err) =>
+      console.error(`Error escribiendo archivo: ${resource}.xml `, err),
+    );
+    file2.on('error', (err) =>
+      console.error(`Error escribiendo archivo:${resource2}.xml`, err),
+    );
   } catch (error) {
     console.log(error, 'ERROR GENERANDO LOS ARCHIVOS DE CONSULTA');
   }
@@ -74,7 +88,15 @@ const saveInDB = async () => {
         encoding: 'utf8',
       },
     );
+
+    const validationResult = XMLValidator.validate(placesXML);
+    if (validationResult !== true) {
+      console.error('XML inválido:', validationResult.err);
+      throw Error('No esta bien formateado el documento xml de places.xml');
+    }
+
     const placeData = parser.parse(placesXML);
+
     const lugares = placeData.places.place;
     // CARGANDO LUGARES A DB
     if (places.length == 0) {
@@ -109,17 +131,11 @@ const saveInDB = async () => {
 
     const groupByPlaceIdPricing = unionDeArregloLugarYPrecio(lugares, prices);
 
-    const pricesFromDB = await prismaClient.price.findMany();
     console.log('INICIO DE LA CARGA DE LOS PRECIOS');
     for (const item of groupByPlaceIdPricing) {
-      const priceFound = pricesFromDB.find(
-        (price) => price.place_id == String(item['@_place_id']),
-      );
-
       await prismaClient.price.upsert({
         where: {
           place_id: String(item['@_place_id']),
-          id: priceFound?.id ?? '',
         },
         update: {
           diesel: item.type?.diesel ?? null,

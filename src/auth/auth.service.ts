@@ -1,36 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { LoginDto } from 'src/common/dtos/loginDto';
 import { SupabaseService } from 'src/services/supabase/supabase.service';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly supabase: SupabaseService,
-  ) {}
-
-  generateToken(payload: any) {
-    const token = this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET,
-    });
-
-    return token;
-  }
-
-  verifyToken(token: string) {
-    const decodeToken = this.jwtService.verify(token, {
-      secret: process.env.JWT_SECRET,
-    });
-
-    if (!decodeToken) throw new UnauthorizedException('Token invalido');
-
-    return decodeToken;
-  }
+  constructor(private readonly supabase: SupabaseService) {}
 
   async createSupabaseUser(user: LoginDto) {
     const supabase = this.supabase.getClient();
@@ -65,5 +39,14 @@ export class AuthService {
       message: 'Login exitoso!',
       token: data.session.access_token,
     };
+  }
+
+  async logout() {
+    const supabase = this.supabase.getClient();
+    let { error } = await supabase.auth.signOut();
+
+    if (error) {
+      throw new BadRequestException('Error en la sesion');
+    }
   }
 }

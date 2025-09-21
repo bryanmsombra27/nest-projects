@@ -29,7 +29,9 @@ model Price {
   diesel   Float?
 
   place    Place   @relation(fields: [place_id], references: [place_id])
-  place_id String
+  place_id String @unique
+
+
 }
 
 
