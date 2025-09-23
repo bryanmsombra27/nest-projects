@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateRatingDto } from './dto/create-rating.dto';
@@ -66,5 +67,24 @@ export class RatingsService {
 
   remove(id: number) {
     return `This action removes a #${id} rating`;
+  }
+
+  async getComment(gas_station_id: string, user: any) {
+    const comment = await this.prismaService.commentRating.findFirst({
+      where: {
+        userId: user.id,
+        gasStationId: gas_station_id,
+      },
+    });
+
+    if (!comment) {
+      throw new NotFoundException(
+        'El comentario  no existe  o no fue hecho por el usuario',
+      );
+    }
+
+    return {
+      comment,
+    };
   }
 }

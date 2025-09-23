@@ -11,9 +11,9 @@ async function bootstrap() {
   // saveInDB();
   app.enableCors();
 
-  cron.schedule('25 */4 * * *', () => {
-    reporteXML('prices', 'places');
-  });
+  // cron.schedule('25 */4 * * *', () => {
+  //   reporteXML('prices', 'places');
+  // });
 
   app.useGlobalPipes(
     new ValidationPipe({

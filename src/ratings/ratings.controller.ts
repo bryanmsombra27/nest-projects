@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { RatingsService } from './ratings.service';
 import { CreateRatingDto } from './dto/create-rating.dto';
@@ -21,9 +22,11 @@ export class RatingsController {
 
   @Post()
   create(@Body() createRatingDto: CreateRatingDto, @supabaseUser() user) {
-    console.log(user.id, 'ENTRA AL CREAR');
-
     return this.ratingsService.create(createRatingDto, user);
+  }
+  @Get('comment')
+  getComment(@Query('gas_station') gasStation: string, @supabaseUser() user) {
+    return this.ratingsService.getComment(gasStation, user);
   }
 
   @Get()
