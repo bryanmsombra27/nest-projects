@@ -8,12 +8,12 @@ import { UpdateZoneDto } from './dto/update-zone.dto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { XMLParser } from 'fast-xml-parser';
-import { reporteXML } from 'src/common/helpers/writeFileXML';
-import { arregloFinal } from 'src/common/helpers/registroZona';
 import {
   arregloFiltradoPorLugarAcapulco,
   unionDeArregloLugarYPrecio,
 } from 'src/common/helpers/filter_place_and_price';
+import { PrismaService } from 'src/services/prisma/prisma.service';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 const options = {
   ignoreAttributes: false,
   attributeNamePrefix: '@_',
@@ -23,12 +23,36 @@ const parser = new XMLParser(options);
 
 @Injectable()
 export class ZonesService {
+  constructor(private readonly prismaService: PrismaService) {}
+
   create(createZoneDto: CreateZoneDto) {
     return 'This action adds a new zone';
   }
 
-  findAll() {
-    return `This action returns all zones`;
+  async findAll(paginationDto: PaginationDto) {
+    const page = paginationDto?.page ?? 1;
+    const limit = 10;
+    const offset = (+page - 1) * limit;
+
+    const gas_stations = await this.prismaService.place.findMany({
+      include: {
+        prices: true,
+      },
+      take: limit,
+      skip: offset,
+    });
+
+    const count = await this.prismaService.place.count();
+
+    // ceil redondear hacia arriba
+    const totalPages = Math.ceil(count / limit);
+
+    return {
+      gas_stations,
+      count,
+      totalPages,
+      page,
+    };
   }
 
   async findOne(zona: string) {

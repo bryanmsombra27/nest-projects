@@ -21,6 +21,7 @@ export class AuthService {
     return {
       message: 'Usuario registrado con exito, por favor verifica tu cuenta',
       user: data.user,
+      token: data.session.access_token,
     };
   }
 

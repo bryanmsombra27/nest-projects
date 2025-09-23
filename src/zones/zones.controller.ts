@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ZonesService } from './zones.service';
 import { CreateZoneDto } from './dto/create-zone.dto';
 import { UpdateZoneDto } from './dto/update-zone.dto';
 import { PrismaService } from 'src/services/prisma/prisma.service';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Controller('zones')
 export class ZonesController {
@@ -22,8 +24,11 @@ export class ZonesController {
   }
 
   @Get()
-  findAll() {
-    return this.zonesService.findAll();
+  findAll(
+    @Query('page')
+    paginationDto: PaginationDto,
+  ) {
+    return this.zonesService.findAll(paginationDto);
   }
 
   @Get(':zona')
