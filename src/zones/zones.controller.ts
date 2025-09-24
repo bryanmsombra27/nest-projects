@@ -25,7 +25,7 @@ export class ZonesController {
 
   @Get()
   findAll(
-    @Query('page')
+    @Query()
     paginationDto: PaginationDto,
   ) {
     return this.zonesService.findAll(paginationDto);

@@ -53,8 +53,28 @@ export class RatingsService {
     };
   }
 
-  findAll() {
-    return `This action returns all ratings`;
+  async findAll() {
+    const stations = await this.prismaService.$queryRawUnsafe(`
+ SELECT 
+    p."name",
+    p."place_id",
+    pr."regular",
+    pr."premium",
+    pr."diesel",
+    AVG(c."rating") AS avg_rating
+  FROM "Place" p
+  JOIN "CommentRating" c 
+    ON p."place_id" = c."gasStationId"
+  LEFT JOIN "Price" pr 
+    ON p."place_id" = pr."place_id"
+  GROUP BY p."id", p."name", pr."regular", pr."premium", pr."diesel"
+  ORDER BY avg_rating DESC
+  LIMIT 10
+    `);
+
+    return {
+      stations,
+    };
   }
 
   findOne(id: number) {

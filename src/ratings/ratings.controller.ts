@@ -29,7 +29,7 @@ export class RatingsController {
     return this.ratingsService.getComment(gasStation, user);
   }
 
-  @Get()
+  @Get('top')
   findAll() {
     return this.ratingsService.findAll();
   }

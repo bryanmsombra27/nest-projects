@@ -20,13 +20,13 @@ export class LocationController {
     return this.locationService.create(createLocationDto);
   }
 
-  @Get()
-  findAll() {
-    return this.locationService.findAll();
-  }
   @Post('coords')
   findByLocation(@Body() location: CreateLocationDto) {
     return this.locationService.findByLocation(location);
+  }
+  @Get('top')
+  findAllRatings() {
+    return this.locationService.findAll();
   }
 
   @Get(':id')
